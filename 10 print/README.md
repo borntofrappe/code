@@ -39,8 +39,30 @@ _Please note_: `clearRect` is necessary to avoid drawing the lines above the pre
 context.clearRect(0, 0, width, height);
 ```
 
-<!-- ## Rain
+## Rain
 
-Drizzle to downpour.
+With `rain.html` I take the _10 print_ concept and use it to simulate rain. This is possible by having the conditional draw a line only if the condition resolves to `true`, without specifying an `else` statement.
 
-## Matter -->
+```lua
+ if (odds()) {
+  context.beginPath();
+  context.moveTo(x, y);
+  context.lineTo(x + spacing, y + spacing);
+  context.closePath();
+  context.stroke();
+}
+```
+
+To simulate the rain's movement, the operation is repeated using [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
+
+To further refine the demo, the rain's appearance is modified with a slider, which modifies the simulation through different variables:
+
+- the spacing
+
+- the line width
+
+- the interval at which the animation is refreshed
+
+- the odds describing how frequently to draw a line.
+
+_Nifty_; the icons are copied from [tablericons](https://tablericons.com).
