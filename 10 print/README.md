@@ -39,7 +39,7 @@ _Please note_: `clearRect` is necessary to avoid drawing the lines above the pre
 context.clearRect(0, 0, width, height);
 ```
 
-## Rain
+## [Rain](https://codepen.io/borntofrappe/full/OJXNgeg)
 
 With `rain.html` I take the _10 print_ concept and use it to simulate rain. This is possible by having the conditional draw a line only if the condition resolves to `true`, without specifying an `else` statement.
 

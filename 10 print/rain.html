@@ -93,13 +93,20 @@
 
       const context = canvas.getContext('2d');
 
+      // max color is used for the portion of the rgb components
+      // the idea is to have brighter blues as the lines are drawn lower and to the right
       const maxColor = 100;
+
+      // distance between successive lines
       let spacing = 20;
+      let lineWidth = 0.2;
+
+      // limit for requestAnimationFrame
       let drawTime;
       let drawInterval = 60;
-      let lineWidth = 0.2;
-      let threshold = 0.8;
 
+      // odds of drawing a line
+      let threshold = 0.8;
       const odds = () => Math.random() > threshold;
 
       function resize() {
@@ -150,8 +157,15 @@
       animate();
 
       const map = ({ value, min, max, minRange, maxRange }) =>
-        minRange + (maxRange - minRange) * (value / (max - min));
+        minRange + (maxRange - minRange) * ((value - min) / (max - min));
 
+      /*
+    from drizzle to downpour
+    spacing: [25, 10]
+    interval: [100, 40]
+    lineWidth: [0.1, 0.4]
+    threshold: [0.95, 0.65]
+    */
       input.addEventListener('input', (e) => {
         const { value, min, max } = e.target;
         spacing = map({ value, min, max, minRange: 25, maxRange: 10 });
