@@ -8,10 +8,10 @@ ${Array(8)
     <span class="visually-hidden">${`2 to the power of ${length -
       (i + 1)}`}</span>
     <input type="checkbox" />
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-22.5 -37.5 45 52" width="2rem" height="2rem">
-      <g stroke="hsl(0, 0%, 70%)" fill="hsl(45, 90%, 55%)">
-        <circle stroke-width="1" cy="-15" r="15" />
-        <path stroke="hsl(0, 0%, 100%)" stroke-width="0.5" d="M -2 0 v -12 a 3 3 0 0 0 -6 0 3 3 0 0 0 3 3 h 9 a 3 3 0 0 0 3 -3 3 3 0 0 0 -6 0 v 12" />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-22.5 -37.5 45 52" width="1rem" height="1rem">
+      <g>
+        <circle fill="hsl(45, 90%, 55%)" stroke="hsl(0, 0%, 70%)" stroke-width="1" cy="-15" r="15" />
+        <path fill="none" stroke="hsl(0, 0%, 100%)" stroke-width="0.5" d="M -2 0 v -12 a 3 3 0 0 0 -6 0 3 3 0 0 0 3 3 h 9 a 3 3 0 0 0 3 -3 3 3 0 0 0 -6 0 v 12" />
       </g>
       <g fill="hsl(0, 0%, 70%)" stroke="hsl(0, 0%, 60%)" stroke-width="1">
         <circle cy="9" r="5" />
@@ -25,7 +25,7 @@ ${Array(8)
   .join('')}
 
 </form>
-<p><b>0</b></p>
+<p>0</p>
 <button disabled>Shift bit \>\></button>
 `;
 
@@ -65,9 +65,11 @@ button.addEventListener('click', () => {
         input.checked = false;
       } 
       wasChecked = true;
-    } else if(wasChecked) {
-      input.checked = true;
-      wasChecked = false;
+    } else {
+      if(wasChecked) {
+        input.checked = true;
+        wasChecked = false;
+      }
     }
   });
 
@@ -78,6 +80,13 @@ button.addEventListener('click', () => {
   );
   document.querySelector('p').textContent = total;
 
+  // let someChecked = false;
+  // for (const input of inputs) {
+  //   if (input.checked) {
+  //     someChecked = true;
+  //     break;
+  //   }
+  // }
   const someChecked = [...inputs].some(input => input.checked);
   if(someChecked) {
     button.removeAttribute('disabled');
