@@ -75,3 +75,21 @@ const inputs = form.querySelectorAll('input');
 ```js
 document.querySelector('p').textContent = decimalNumber;
 ```
+
+## Style
+
+The script is responsible for computing the decimal number as the checboxes are updated. The stylesheet is then responsible for tweaking the appearance of the `<svg>` graphic. The idea is to have the lightbulbs grayed-out, thanks to the `filter` property.
+
+```css
+form label svg {
+  filter: grayscale(1);
+}
+```
+
+As the `input` elements are checked then, the graphic returns to its original colors through the sibling selector `+`.
+
+```css
+form label input:checked + svg {
+  filter: grayscale(0);
+}
+```

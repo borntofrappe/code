@@ -51,14 +51,14 @@ form label > * + * {
   margin-bottom: 0.75rem;
 }
 
-form label input:checked + svg {
-  filter: grayscale(0);
-}
-
 form label svg {
   width: 7rem;
   height: 7rem;
   filter: grayscale(1);
+}
+
+form label input:checked + svg {
+  filter: grayscale(0);
 }
 
 p {
