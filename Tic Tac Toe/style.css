@@ -1,0 +1,16 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: hsl(210, 65%, 10%);
+}
+
+canvas {
+  border: 1px dotted hsl(0, 0%, 0%);
+}
