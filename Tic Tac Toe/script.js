@@ -63,6 +63,7 @@ illustration.updateRenderGraph();
 
 let isGameOver = false;
 let isCleared = false;
+let isAnimating = false;
 let animationFrameID = null;
 let direction = {
   x: 1,
@@ -82,6 +83,7 @@ function animateClear() {
     illustration.rotate.y = 0;
     illustration.rotate.z = 0;
     illustration.updateRenderGraph();
+    isAnimating = false;
   } else if (!isCleared && Math.abs(illustration.rotate.x) > Math.PI / 2) {
     for (const row of grid) {
       for (const cell of row) {
@@ -100,6 +102,7 @@ function clear() {
   direction.x =  Math.random() > 0.5 ? 1 : -1;
   direction.y = Math.random() > 0.5 ? 1 : -1;
   direction.z =  Math.random() > 0.5 ? 1 : -1;
+  isAnimating = true;
   animateClear();
 }
 
@@ -146,83 +149,82 @@ function getTranslucentColor(color) {
 }
 
 element.addEventListener('click', e => {
-  if (isGameOver) {
-    clear();
-  } else {
-    isCleared = false;
-
-    const { offsetX, offsetY } = e;
-    const paddingX = width * (1 - scale) / 2;
-    const paddingY = height * (1 - scale) / 2;
-    const widthGrid = width - paddingX * 2;
-    const heightGrid = height - paddingY * 2;
-
-    if (offsetX < paddingX || offsetY < paddingY || offsetX > paddingX + widthGrid || offsetY > paddingY + heightGrid) {
-      console.log('out of bounds');
+  if(!isAnimating) {
+    if (isGameOver) {
+      clear();
     } else {
-
-      const column = Math.floor(((offsetX - paddingX) / widthGrid) * dimensions);
-      const row = Math.floor(((offsetY - paddingY) / heightGrid) * dimensions);
-      if (grid[row][column].value === '') {
-        const x = column * size;
-        const y = row * size;
+      isCleared = false;
   
-        const anchorCell = new Anchor({
-          addTo: anchorGrid,
-          translate: { x: x + size / 2, y: y + size / 2 },
-        });
+      const { offsetX, offsetY } = e;
+      const paddingX = width * (1 - scale) / 2;
+      const paddingY = height * (1 - scale) / 2;
+      const widthGrid = width - paddingX * 2;
+      const heightGrid = height - paddingY * 2;
   
-        if (turn === 'o') {
-          new Ellipse({
-            addTo: anchorCell,
-            diameter: size / 2.3,
-            stroke: stroke - 5,
-            color: colors[turn],
+      if (!(offsetX < paddingX || offsetY < paddingY || offsetX > paddingX + widthGrid || offsetY > paddingY + heightGrid)) {
+        const column = Math.floor(((offsetX - paddingX) / widthGrid) * dimensions);
+        const row = Math.floor(((offsetY - paddingY) / heightGrid) * dimensions);
+        if (grid[row][column].value === '') {
+          const x = column * size;
+          const y = row * size;
+    
+          const anchorCell = new Anchor({
+            addTo: anchorGrid,
+            translate: { x: x + size / 2, y: y + size / 2 },
           });
-        } else if (turn === 'x') {
-          new Shape({
-            addTo: anchorCell,
-            stroke: stroke - 5,
-            color: colors[turn],
-            path: [{ x: -size / 5, y: -size / 5 }, { x: size / 5, y: size / 5 }],
-          });
-          new Shape({
-            addTo: anchorCell,
-            stroke: stroke - 5,
-            color: colors[turn],
-            path: [{ x: size / 5, y: -size / 5 }, { x: -size / 5, y: size / 5 }],
-          });
-        }
-  
-        grid[row][column].value = turn;
-        grid[row][column].shape = anchorCell;
-  
-        const victoryIndexes = checkVictory();
-        if (victoryIndexes) {
-          const color = getTranslucentColor(colors[turn]);
-          for (const [row, column] of victoryIndexes) {
-            new Rect({
-              addTo: grid[row][column].shape,
-              width: size - stroke - 10,
-              height: size - stroke - 10,
-              stroke: 0,
-              color,
-              fill: true,
+    
+          if (turn === 'o') {
+            new Ellipse({
+              addTo: anchorCell,
+              diameter: size / 2.3,
+              stroke: stroke - 5,
+              color: colors[turn],
+            });
+          } else if (turn === 'x') {
+            new Shape({
+              addTo: anchorCell,
+              stroke: stroke - 5,
+              color: colors[turn],
+              path: [{ x: -size / 5, y: -size / 5 }, { x: size / 5, y: size / 5 }],
+            });
+            new Shape({
+              addTo: anchorCell,
+              stroke: stroke - 5,
+              color: colors[turn],
+              path: [{ x: size / 5, y: -size / 5 }, { x: -size / 5, y: size / 5 }],
             });
           }
-          isGameOver = true;
-        } else {
-          const isDraw = grid
-            .reduce((acc, curr) => [...acc, ...curr], [])
-            .every(({ value }) => value !== '');
-  
-          if (isDraw) {
+    
+          grid[row][column].value = turn;
+          grid[row][column].shape = anchorCell;
+    
+          const victoryIndexes = checkVictory();
+          if (victoryIndexes) {
+            const color = getTranslucentColor(colors[turn]);
+            for (const [row, column] of victoryIndexes) {
+              new Rect({
+                addTo: grid[row][column].shape,
+                width: size - stroke - 10,
+                height: size - stroke - 10,
+                stroke: 0,
+                color,
+                fill: true,
+              });
+            }
             isGameOver = true;
+          } else {
+            const isDraw = grid
+              .reduce((acc, curr) => [...acc, ...curr], [])
+              .every(({ value }) => value !== '');
+    
+            if (isDraw) {
+              isGameOver = true;
+            }
           }
+    
+          turn = turn === 'o' ? 'x' : 'o';
+          illustration.updateRenderGraph();
         }
-  
-        turn = turn === 'o' ? 'x' : 'o';
-        illustration.updateRenderGraph();
       }
     }
   }
