@@ -2,6 +2,7 @@ const { Illustration, Anchor, Shape, Ellipse, Rect } = Zdog;
 
 const element = document.querySelector('canvas');
 const { width, height } = element;
+
 let turn = 'o';
 const dimensions = 3;
 const size = width / dimensions;
@@ -17,16 +18,6 @@ const grid = Array(dimensions)
       }))
   );
 
-const illustration = new Illustration({
-  element,
-  scale: 0.9,
-});
-
-const anchorGrid = new Anchor({
-  addTo: illustration,
-  translate: { x: -width / 2, y: -height / 2, z: 0 },
-});
-
 const color = 'hsl(220, 90%, 40%)';
 const stroke = 25;
 
@@ -34,6 +25,16 @@ const colors = {
   o: 'hsl(155, 80%, 45%)',
   x: 'hsl(45, 100%, 65%)',
 };
+
+const illustration = new Illustration({
+  element,
+  scale: 0.7,
+});
+
+const anchorGrid = new Anchor({
+  addTo: illustration,
+  translate: { x: -width / 2, y: -height / 2, z: 0 },
+});
 
 for (let dimension = 0; dimension <= dimensions; dimension += 1) {
   new Shape({
@@ -62,15 +63,25 @@ illustration.updateRenderGraph();
 let isGameOver = false;
 let isCleared = false;
 let animationFrameID = null;
+let direction = {
+  x: 1,
+  y: 1,
+  z: 1,
+};
 
 function animateClear() {
   animationFrameID = requestAnimationFrame(animateClear);
   illustration.updateRenderGraph();
-  illustration.rotate.y += 0.05;
-  if (illustration.rotate.y > Math.PI) {
+  illustration.rotate.x += 0.02 * direction.x;
+  illustration.rotate.y += 0.02 * direction.y;
+  illustration.rotate.z += 0.02 * direction.z;
+  if (Math.abs(illustration.rotate.x) > Math.PI) {
     cancelAnimationFrame(animationFrameID);
+    illustration.rotate.x = 0;
     illustration.rotate.y = 0;
-  } else if (!isCleared && illustration.rotate.y > Math.PI / 2) {
+    illustration.rotate.z = 0;
+    illustration.updateRenderGraph();
+  } else if (!isCleared && Math.abs(illustration.rotate.x) > Math.PI / 2) {
     for (const row of grid) {
       for (const cell of row) {
         if (cell.value && cell.shape) {
@@ -85,6 +96,9 @@ function animateClear() {
 }
 
 function clear() {
+  direction.x =  Math.random() > 0.5 ? 1 : -1;
+  direction.y = Math.random() > 0.5 ? 1 : -1;
+  direction.z =  Math.random() > 0.5 ? 1 : -1;
   animateClear();
 }
 
@@ -123,6 +137,11 @@ function checkVictory() {
     indexes.push([2, 0], [1, 1], [0, 2]);
   }
   return indexes.length > 0 ? indexes : false;
+}
+
+function getTranslucentColor(color) {
+  const [h, s, l] = color.match(/\d+/g);
+  return `hsla(${h}, ${s}%, ${l}%, 0.3)`;
 }
 
 element.addEventListener('click', e => {
@@ -170,12 +189,12 @@ element.addEventListener('click', e => {
 
       const victoryIndexes = checkVictory();
       if (victoryIndexes) {
-        const color = `${colors[turn].slice(0, -1)}, 0.2)`;
+        const color = getTranslucentColor(colors[turn]);
         for (const [row, column] of victoryIndexes) {
           new Rect({
             addTo: grid[row][column].shape,
-            width: size - stroke,
-            height: size - stroke,
+            width: size - stroke - 10,
+            height: size - stroke - 10,
             stroke: 0,
             color,
             fill: true,
