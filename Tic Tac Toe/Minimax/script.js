@@ -3,8 +3,9 @@ const { Illustration, Anchor, Shape, Ellipse, Rect } = Zdog;
 const element = document.querySelector('canvas');
 const { width, height } = element;
 
-const player = Math.random() > 0.5 ? 'o' : 'x';
-const computer = player === 'o' ? 'x' : 'o';
+let player = Math.random() > 0.5 ? 'o' : 'x';
+let computer = player === 'o' ? 'x' : 'o';
+let currentTurn = player;
 
 const dimensions = 3;
 const size = width / dimensions;
@@ -86,6 +87,8 @@ function animateClear() {
     illustration.rotate.z = 0;
     illustration.updateRenderGraph();
     isAnimating = false;
+    player = Math.random() > 0.5 ? 'o' : 'x';
+    computer = player === 'o' ? 'x' : 'o';
   } else if (!isCleared && Math.abs(illustration.rotate.x) > Math.PI / 2) {
     for (const row of grid) {
       for (const cell of row) {
@@ -190,7 +193,7 @@ function addToGrid(row, column, turn) {
 function checkGameOver() {
   const winningIndexes = getWinningIndexes();
   if (winningIndexes.length > 0) {
-    const color = getTranslucentColor(colors[player]);
+    const color = getTranslucentColor(colors[currentTurn]);
     for (const [row, column] of winningIndexes) {
       new Rect({
         addTo: grid[row][column].shape,
@@ -237,11 +240,13 @@ element.addEventListener('click', e => {
           ((offsetY - paddingY) / heightGrid) * dimensions
         );
         if (grid[row][column].value === '') {
+          currentTurn = player;
           addToGrid(row, column, player);
           isGameOver = checkGameOver();
           if (!isGameOver) {
-            // IMPLEMENT ALGORITHM HERE TO HAVE THE AI CHOOSE THE APPROPRIATE CELL
-            addToGrid(1, 1, computer);
+            currentTurn = computer;
+            randomMove();
+            // bestMove(); // WITH MINIMAX ALGORITHM
             isGameOver = checkGameOver();
           }
           illustration.updateRenderGraph();
@@ -250,3 +255,27 @@ element.addEventListener('click', e => {
     }
   }
 });
+
+function randomMove() {
+  const indexes = [];
+  for(let row = 0; row < dimensions; row += 1) {
+    for(let column = 0; column < dimensions; column += 1) {
+      if(grid[row][column].value === '') {
+        indexes.push([row, column]);
+      }
+    }
+  }
+
+  console.log(indexes);
+  const randomIndex = Math.floor(Math.random() * indexes.length);
+  const [row, column] = indexes[randomIndex];
+  addToGrid(row, column, computer);
+}
+
+function bestMove() {
+
+}
+
+function minimax() {
+
+}
