@@ -6,6 +6,7 @@ const { width, height } = element;
 let turn = 'o';
 const dimensions = 3;
 const size = width / dimensions;
+const scale = 0.7;
 
 const grid = Array(dimensions)
   .fill()
@@ -28,7 +29,7 @@ const colors = {
 
 const illustration = new Illustration({
   element,
-  scale: 0.7,
+  scale
 });
 
 const anchorGrid = new Anchor({
@@ -151,68 +152,78 @@ element.addEventListener('click', e => {
     isCleared = false;
 
     const { offsetX, offsetY } = e;
-    const column = Math.floor((offsetX / width) * dimensions);
-    const row = Math.floor((offsetY / height) * dimensions);
-    if (grid[row][column].value === '') {
-      const x = column * size;
-      const y = row * size;
+    const paddingX = width * (1 - scale) / 2;
+    const paddingY = height * (1 - scale) / 2;
+    const widthGrid = width - paddingX * 2;
+    const heightGrid = height - paddingY * 2;
 
-      const anchorCell = new Anchor({
-        addTo: anchorGrid,
-        translate: { x: x + size / 2, y: y + size / 2 },
-      });
+    if (offsetX < paddingX || offsetY < paddingY || offsetX > paddingX + widthGrid || offsetY > paddingY + heightGrid) {
+      console.log('out of bounds');
+    } else {
 
-      if (turn === 'o') {
-        new Ellipse({
-          addTo: anchorCell,
-          diameter: size / 2.3,
-          stroke: stroke - 5,
-          color: colors[turn],
+      const column = Math.floor(((offsetX - paddingX) / widthGrid) * dimensions);
+      const row = Math.floor(((offsetY - paddingY) / heightGrid) * dimensions);
+      if (grid[row][column].value === '') {
+        const x = column * size;
+        const y = row * size;
+  
+        const anchorCell = new Anchor({
+          addTo: anchorGrid,
+          translate: { x: x + size / 2, y: y + size / 2 },
         });
-      } else if (turn === 'x') {
-        new Shape({
-          addTo: anchorCell,
-          stroke: stroke - 5,
-          color: colors[turn],
-          path: [{ x: -size / 5, y: -size / 5 }, { x: size / 5, y: size / 5 }],
-        });
-        new Shape({
-          addTo: anchorCell,
-          stroke: stroke - 5,
-          color: colors[turn],
-          path: [{ x: size / 5, y: -size / 5 }, { x: -size / 5, y: size / 5 }],
-        });
-      }
-
-      grid[row][column].value = turn;
-      grid[row][column].shape = anchorCell;
-
-      const victoryIndexes = checkVictory();
-      if (victoryIndexes) {
-        const color = getTranslucentColor(colors[turn]);
-        for (const [row, column] of victoryIndexes) {
-          new Rect({
-            addTo: grid[row][column].shape,
-            width: size - stroke - 10,
-            height: size - stroke - 10,
-            stroke: 0,
-            color,
-            fill: true,
+  
+        if (turn === 'o') {
+          new Ellipse({
+            addTo: anchorCell,
+            diameter: size / 2.3,
+            stroke: stroke - 5,
+            color: colors[turn],
+          });
+        } else if (turn === 'x') {
+          new Shape({
+            addTo: anchorCell,
+            stroke: stroke - 5,
+            color: colors[turn],
+            path: [{ x: -size / 5, y: -size / 5 }, { x: size / 5, y: size / 5 }],
+          });
+          new Shape({
+            addTo: anchorCell,
+            stroke: stroke - 5,
+            color: colors[turn],
+            path: [{ x: size / 5, y: -size / 5 }, { x: -size / 5, y: size / 5 }],
           });
         }
-        isGameOver = true;
-      } else {
-        const isDraw = grid
-          .reduce((acc, curr) => [...acc, ...curr], [])
-          .every(({ value }) => value !== '');
-
-        if (isDraw) {
+  
+        grid[row][column].value = turn;
+        grid[row][column].shape = anchorCell;
+  
+        const victoryIndexes = checkVictory();
+        if (victoryIndexes) {
+          const color = getTranslucentColor(colors[turn]);
+          for (const [row, column] of victoryIndexes) {
+            new Rect({
+              addTo: grid[row][column].shape,
+              width: size - stroke - 10,
+              height: size - stroke - 10,
+              stroke: 0,
+              color,
+              fill: true,
+            });
+          }
           isGameOver = true;
+        } else {
+          const isDraw = grid
+            .reduce((acc, curr) => [...acc, ...curr], [])
+            .every(({ value }) => value !== '');
+  
+          if (isDraw) {
+            isGameOver = true;
+          }
         }
+  
+        turn = turn === 'o' ? 'x' : 'o';
+        illustration.updateRenderGraph();
       }
-
-      turn = turn === 'o' ? 'x' : 'o';
-      illustration.updateRenderGraph();
     }
   }
 });
