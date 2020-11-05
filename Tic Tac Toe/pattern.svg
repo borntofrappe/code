@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 20 20">
+  <g fill="none" stroke-width="1">
+    <g stroke="hsl(155, 80%, 45%)">
+      <circle cx="5" cy="5" r="2" />
+      <circle cx="15" cy="15" r="2" />
+    </g>
+    <g stroke="hsl(45, 100%, 65%)" stroke-linecap="round">
+      <path d="M 13 3 l 4 4 m 0 -4 l -4 4" />
+      <path d="M 3 13 l 4 4 m 0 -4 l -4 4" />
+    </g>
+  </g>
+</svg>
