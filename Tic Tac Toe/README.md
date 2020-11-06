@@ -23,3 +23,5 @@ Building on the progress achieved with _Tic Tac Zdog_, the second experiment all
 - check for a tie
 
 - provide the next move
+
+_Update_: document how the best move is picked regardless of how fast it is achieved. This can be fixed considering the depth.

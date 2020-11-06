@@ -291,10 +291,10 @@ function randomMove() {
   return indexes[randomIndex];
 }
 
-function minimax(board, isMaximising) {
+function minimax(board, depth, isMaximising) {
   const { winner } = checkWinner();
   if (winner) {
-    return scores[winner];
+    return scores[winner] / depth;
   }
 
   if (checkTie()) {
@@ -307,7 +307,7 @@ function minimax(board, isMaximising) {
       for (let column = 0; column < dimensions; column += 1) {
         if (board[row][column].value === '') {
           board[row][column].value = computer;
-          bestScore = Math.max(bestScore, minimax(board, false));
+          bestScore = Math.max(bestScore, minimax(board, depth + 1, false));
           board[row][column].value = '';
         }
       }
@@ -317,7 +317,7 @@ function minimax(board, isMaximising) {
       for (let column = 0; column < dimensions; column += 1) {
         if (board[row][column].value === '') {
           board[row][column].value = player;
-          bestScore = Math.min(bestScore, minimax(board, true));
+          bestScore = Math.min(bestScore, minimax(board, depth + 1, true));
           board[row][column].value = '';
         }
       }
@@ -333,7 +333,7 @@ function bestMove() {
     for (let column = 0; column < dimensions; column += 1) {
       if (grid[row][column].value === '') {
         grid[row][column].value = computer;
-        const score = minimax(grid, false);
+        const score = minimax(grid, 0, false);
         if (score > bestScore) {
           bestScore = score;
           move = [row, column];
