@@ -1,6 +1,7 @@
+// SETUP
 const { Illustration, Anchor, Shape, Ellipse, Rect } = Zdog;
-const canvas = document.querySelector('canvas');
-const { width, height } = canvas;
+const element = document.querySelector('canvas');
+const { width, height } = element;
 
 /* tic tac toe board
 [
@@ -12,10 +13,10 @@ const { width, height } = canvas;
 const dimensions = 3;
 const grid = Array(dimensions)
   .fill()
-  .map((d, i) =>
+  .map(() =>
     Array(dimensions)
       .fill()
-      .map((d, j) => ({
+      .map(() => ({
         value: '',
         shape: null,
       }))
@@ -30,7 +31,7 @@ const stroke = 25;
 // DEFAULT VISUALS
 // illustration
 const illustration = new Illustration({
-  element: canvas,
+  element,
   scale,
 });
 
@@ -67,9 +68,9 @@ illustration.updateRenderGraph();
 
 // PLAYER INTERACTION
 /* controlling variables to
-- avoid user interaction as requestAnimationFrame animates the grid
-- calling shape.remove() only once
-- clear the board when clicking the window and after the game is over
+- avoid interaction as requestAnimationFrame animates the grid
+- avoid calling shape.remove() repeatedly
+- clear the board following a gameover
 */
 let isAnimating = false;
 let isCleared = false;
@@ -115,9 +116,10 @@ function animateClear() {
     illustration.rotate.z = 0;
     illustration.updateRenderGraph();
 
-    // reset to initial values
+    // reset initial values
     isAnimating = false;
     isGameOver = false;
+    // reinitialize player and computer
     player = Math.random() > 0.5 ? 'o' : 'x';
     computer = player === 'o' ? 'x' : 'o';
     scores = {
@@ -126,7 +128,7 @@ function animateClear() {
       tie: 0,
     };
   } else if (!isCleared && Math.abs(illustration.rotate.x) > Math.PI / 2) {
-    // remove the shapes after half a full rotation
+    // remove the shapes after half a rotation
     for (const row of grid) {
       for (const cell of row) {
         if (cell.value && cell.shape) {
@@ -149,6 +151,7 @@ function clear() {
   animateClear();
 }
 
+// return the winning side and the winning indexes
 function checkWinner() {
   let winner = null;
   const indexes = [];
@@ -192,16 +195,11 @@ function checkWinner() {
   return { winner, indexes };
 }
 
+// return true if there are no available cells
 function checkTie() {
   return grid
     .reduce((acc, curr) => [...acc, ...curr], [])
     .every(({ value }) => value !== '');
-}
-
-// return a semitransparent version of the input hsl color
-function getTransluentHSL(hsl) {
-  const [h, s, l] = hsl.match(/\d+/g);
-  return `hsla(${h}, ${s}%, ${l}%, 0.3)`;
 }
 
 // add an 'x' or 'o' to the grid
@@ -257,21 +255,100 @@ function addToGrid(row, column, turn) {
 - null otherwise 
 */
 
+// return a semitransparent version of the input hsl color
+function getTransluentHSL(hsl) {
+  const [h, s, l] = hsl.match(/\d+/g);
+  return `hsla(${h}, ${s}%, ${l}%, 0.3)`;
+}
+
+// highlight the winner with rectangles for the winning combination
 function highlightWinner(winner, indexes) {
-  const color = getTransluentHSL(colors[winner]);
+  const colorWinner = getTransluentHSL(colors[winner]);
   for (const [row, column] of indexes) {
     new Rect({
       addTo: grid[row][column].shape,
       width: cellSize - stroke - 10,
       height: cellSize - stroke - 10,
       stroke: 0,
-      color,
+      color: colorWinner,
       fill: true,
     });
   }
 }
 
-canvas.addEventListener('click', e => {
+// COMPUTER AI
+function randomMove() {
+  const indexes = [];
+  for (let row = 0; row < dimensions; row += 1) {
+    for (let column = 0; column < dimensions; column += 1) {
+      if (grid[row][column].value === '') {
+        indexes.push([row, column]);
+      }
+    }
+  }
+
+  const randomIndex = Math.floor(Math.random() * indexes.length);
+  return indexes[randomIndex];
+}
+
+function minimax(board, isMaximising) {
+  const { winner } = checkWinner();
+  if (winner) {
+    return scores[winner];
+  }
+
+  if (checkTie()) {
+    return scores.tie;
+  }
+
+  let bestScore = isMaximising ? -Infinity : Infinity;
+  if (isMaximising) {
+    for (let row = 0; row < dimensions; row += 1) {
+      for (let column = 0; column < dimensions; column += 1) {
+        if (board[row][column].value === '') {
+          board[row][column].value = computer;
+          bestScore = Math.max(bestScore, minimax(board, false));
+          board[row][column].value = '';
+        }
+      }
+    }
+  } else {
+    for (let row = 0; row < dimensions; row += 1) {
+      for (let column = 0; column < dimensions; column += 1) {
+        if (board[row][column].value === '') {
+          board[row][column].value = player;
+          bestScore = Math.min(bestScore, minimax(board, true));
+          board[row][column].value = '';
+        }
+      }
+    }
+  }
+  return bestScore;
+}
+
+function bestMove() {
+  let bestScore = -Infinity;
+  let move = [];
+  for (let row = 0; row < dimensions; row += 1) {
+    for (let column = 0; column < dimensions; column += 1) {
+      if (grid[row][column].value === '') {
+        grid[row][column].value = computer;
+        const score = minimax(grid, false);
+        if (score > bestScore) {
+          bestScore = score;
+          move = [row, column];
+        }
+        grid[row][column].value = '';
+      }
+    }
+  }
+
+  return move;
+}
+
+// CLICK INTERACTION
+// consider player and computer in succession
+element.addEventListener('click', e => {
   if (!isAnimating) {
     if (isGameOver) {
       clear();
@@ -301,36 +378,26 @@ canvas.addEventListener('click', e => {
           ((offsetY - paddingY) / heightGrid) * dimensions
         );
 
-        // actual turn
         if (grid[row][column].value === '') {
-          // set current player
-          // add the shape and value to the grid
+          // PLAYER
           addToGrid(row, column, player);
-          // check for a gameover
           const { winner, indexes } = checkWinner();
           if (winner) {
             highlightWinner(winner, indexes);
             isGameOver = true;
+          } else if (checkTie()) {
+            isGameOver = true;
           } else {
-            const tie = checkTie();
-            if (tie) {
+            // COMPUTER
+            // const [rowComputer, columnComputer] = randomMove(); // pick at random
+            const [rowComputer, columnComputer] = bestMove(); // pick through the minimax function
+            addToGrid(rowComputer, columnComputer, computer);
+            const { winner: winnerComputer, indexes: indexesComputer } = checkWinner();
+            if (winnerComputer) {
+              highlightWinner(winnerComputer, indexesComputer);
               isGameOver = true;
-            } else {
-              // have the AI pick which cell to add
-              // const [row, column] = randomMove(); // AT RANDOM
-              const [row, column] = bestMove(); // WITH MINIMAX ALGORITHM
-              addToGrid(row, column, computer);
-              console.log(row, column);
-              const { winner, indexes } = checkWinner();
-              if (winner) {
-                highlightWinner(winner, indexes);
-                isGameOver = true;
-              } else {
-                const tie = checkTie();
-                if (tie) {
-                  isGameOver = true;
-                }
-              }
+            } else if (checkTie()) {
+              isGameOver = true;
             }
           }
           illustration.updateRenderGraph();
@@ -339,75 +406,3 @@ canvas.addEventListener('click', e => {
     }
   }
 });
-
-// pick a cell at random from the available set
-function randomMove() {
-  const indexes = [];
-  for (let row = 0; row < dimensions; row += 1) {
-    for (let column = 0; column < dimensions; column += 1) {
-      if (grid[row][column].value === '') {
-        indexes.push([row, column]);
-      }
-    }
-  }
-
-  const randomIndex = Math.floor(Math.random() * indexes.length);
-  return indexes[randomIndex];
-}
-
-function bestMove() {
-  let bestScore = -Infinity;
-  let move = [];
-  for (let row = 0; row < dimensions; row += 1) {
-    for (let column = 0; column < dimensions; column += 1) {
-      if (grid[row][column].value === '') {
-        grid[row][column].value = computer;
-        const score = minimax(grid, false);
-        if (score > bestScore) {
-          bestScore = score;
-          move = [row, column];
-        }
-        grid[row][column].value = '';
-      }
-    }
-  }
-
-  return move;
-}
-
-function minimax(board, isMaximising) {
-  const { winner } = checkWinner();
-  if (winner) {
-    return scores[winner];
-  }
-  const tie = checkTie();
-  if (tie) {
-    return scores.tie;
-  }
-
-  let bestScore = isMaximising ? -Infinity : Infinity;
-  if (isMaximising) {
-    for (let row = 0; row < dimensions; row += 1) {
-      for (let column = 0; column < dimensions; column += 1) {
-        if (board[row][column].value === '') {
-          board[row][column].value = computer;
-          const score = minimax(board, false);
-          board[row][column].value = '';
-          bestScore = Math.max(bestScore, score);
-        }
-      }
-    }
-  } else {
-    for (let row = 0; row < dimensions; row += 1) {
-      for (let column = 0; column < dimensions; column += 1) {
-        if (board[row][column].value === '') {
-          board[row][column].value = player;
-          const score = minimax(board, true);
-          board[row][column].value = '';
-          bestScore = Math.min(bestScore, score);
-        }
-      }
-    }
-  }
-  return bestScore;
-}
