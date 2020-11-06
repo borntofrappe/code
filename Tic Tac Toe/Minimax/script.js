@@ -281,7 +281,7 @@ function minimax(board, depth, isMaximising) {
   if (winner) {
     // ! use the depth to weigh the score
     // the idea is to attribute a higher score to victories achieved early
-    return scores[winner] / depth;
+    return scores[winner] / (depth + 1);
   }
 
   if (checkTie()) {
