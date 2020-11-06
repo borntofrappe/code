@@ -8,8 +8,7 @@ body {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" opacity="0.05" width="50" heighr="50" viewBox="0 0 20 20"%3E%3Cg fill="none" stroke-width="1"%3E%3Cg stroke="hsl(155, 80%25, 45%25)"%3E%3Ccircle cx="5" cy="5" r="2" /%3E%3Ccircle cx="15" cy="15" r="2" /%3E%3C/g%3E%3Cg stroke="hsl(45, 100%25, 65%25)" stroke-linecap="round"%3E%3Cpath d="M 13 3 l 4 4 m 0 -4 l -4 4" /%3E%3Cpath d="M 3 13 l 4 4 m 0 -4 l -4 4" /%3E%3C/g%3E%3C/g%3E%3C/svg%3E'),
+  background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" opacity="0.05" width="50" heighr="50" viewBox="0 0 20 20"%3E%3Cg fill="none" stroke-width="1"%3E%3Cg stroke="hsl(155, 80%25, 45%25)"%3E%3Ccircle cx="5" cy="5" r="2" /%3E%3Ccircle cx="15" cy="15" r="2" /%3E%3C/g%3E%3Cg stroke="hsl(45, 100%25, 65%25)" stroke-linecap="round"%3E%3Cpath d="M 13 3 l 4 4 m 0 -4 l -4 4" /%3E%3Cpath d="M 3 13 l 4 4 m 0 -4 l -4 4" /%3E%3C/g%3E%3C/g%3E%3C/svg%3E') -20px -20px /
+      40px,
     hsl(210, 65%, 5%);
-  background-size: 40px;
-  background-position: -25px -25px;
 }

@@ -1,42 +1,54 @@
+// SETUP
 const { Illustration, Anchor, Shape, Ellipse, Rect } = Zdog;
 
-const element = document.querySelector('canvas');
-const { width, height } = element;
+const canvas = document.querySelector('canvas');
+const { width, height } = canvas;
 
-let turn = 'o';
+let currentTurn = 'o';
 const dimensions = 3;
-const size = width / dimensions;
-const scale = 0.7;
-
+/* tic tac toe board
+[
+  ["", "", ""],
+  ["", "", ""],
+  ["", "", ""]
+]
+*/
 const grid = Array(dimensions)
   .fill()
-  .map((d, i) =>
+  .map(() =>
     Array(dimensions)
       .fill()
-      .map((d, j) => ({
+      .map(() => ({
         value: '',
-        shape: null,
+        visual: null,
       }))
   );
 
-const color = 'hsl(220, 90%, 40%)';
-const stroke = 25;
+// scale the illustration down to avoid cropping as the shapes are rotated on the x-y-z axes
+const gridScale = 0.7;
+const gridColor = 'hsl(220, 90%, 40%)';
+const gridStroke = 25;
+const cellSize = width / dimensions;
 
-const colors = {
+const turnsColor = {
   o: 'hsl(155, 80%, 45%)',
   x: 'hsl(45, 100%, 65%)',
 };
+const turnsStroke = 20;
 
+// ZDOG ILLUSTRATION
 const illustration = new Illustration({
-  element,
-  scale
+  element: canvas,
+  scale: gridScale,
 });
 
+// add an anchor point to include shapes from the top left corner
 const anchorGrid = new Anchor({
   addTo: illustration,
   translate: { x: -width / 2, y: -height / 2, z: 0 },
 });
 
+// GRID LINES
 for (let dimension = 0; dimension <= dimensions; dimension += 1) {
   new Shape({
     addTo: anchorGrid,
@@ -44,8 +56,8 @@ for (let dimension = 0; dimension <= dimensions; dimension += 1) {
       { x: (dimension * width) / dimensions, y: 0 },
       { x: (dimension * width) / dimensions, y: height },
     ],
-    stroke,
-    color,
+    stroke: gridStroke,
+    color: gridColor,
   });
 
   new Shape({
@@ -54,18 +66,22 @@ for (let dimension = 0; dimension <= dimensions; dimension += 1) {
       { x: 0, y: (dimension * height) / dimensions },
       { x: width, y: (dimension * height) / dimensions },
     ],
-    stroke,
-    color,
+    stroke: gridStroke,
+    color: gridColor,
   });
 }
 
 illustration.updateRenderGraph();
 
+// GAMEPLAY
 let isGameOver = false;
 let isCleared = false;
 let isAnimating = false;
+
+// CLEAR GRID
+// use requestAnimationFrame to rotate the grid around its center
 let animationFrameID = null;
-let direction = {
+const directionRotation = {
   x: 1,
   y: 1,
   z: 1,
@@ -74,9 +90,9 @@ let direction = {
 function animateClear() {
   animationFrameID = requestAnimationFrame(animateClear);
   illustration.updateRenderGraph();
-  illustration.rotate.x += 0.02 * direction.x;
-  illustration.rotate.y += 0.02 * direction.y;
-  illustration.rotate.z += 0.02 * direction.z;
+  illustration.rotate.x += 0.02 * directionRotation.x;
+  illustration.rotate.y += 0.02 * directionRotation.y;
+  illustration.rotate.z += 0.02 * directionRotation.z;
   if (Math.abs(illustration.rotate.x) > Math.PI) {
     cancelAnimationFrame(animationFrameID);
     illustration.rotate.x = 0;
@@ -84,37 +100,42 @@ function animateClear() {
     illustration.rotate.z = 0;
     illustration.updateRenderGraph();
     isAnimating = false;
+    isGameOver = false;
   } else if (!isCleared && Math.abs(illustration.rotate.x) > Math.PI / 2) {
     for (const row of grid) {
       for (const cell of row) {
-        if (cell.value && cell.shape) {
+        if (cell.value && cell.visual) {
           cell.value = '';
-          cell.shape.remove();
+          cell.visual.remove();
         }
       }
     }
     isCleared = true;
-    isGameOver = false;
   }
 }
 
 function clear() {
-  direction.x =  Math.random() > 0.5 ? 1 : -1;
-  direction.y = Math.random() > 0.5 ? 1 : -1;
-  direction.z =  Math.random() > 0.5 ? 1 : -1;
+  directionRotation.x = Math.random() > 0.5 ? 1 : -1;
+  directionRotation.y = Math.random() > 0.5 ? 1 : -1;
+  directionRotation.z = Math.random() > 0.5 ? 1 : -1;
+  isCleared = false;
   isAnimating = true;
   animateClear();
 }
 
-function checkVictory() {
-  const indexes = [];
+// UTILITY FUNCTIONS
+// check winner returning the winning side and an array describing the winning combination
+function checkWinner() {
+  let winner = null;
+  const position = [];
   for (let i = 0; i < dimensions; i += 1) {
     if (
       grid[0][i].value !== '' &&
       grid[0][i].value === grid[1][i].value &&
       grid[1][i].value === grid[2][i].value
     ) {
-      indexes.push([0, i], [1, i], [2, i]);
+      winner = grid[0][i].value;
+      position.push([0, i], [1, i], [2, i]);
       break;
     }
     if (
@@ -122,7 +143,8 @@ function checkVictory() {
       grid[i][0].value === grid[i][1].value &&
       grid[i][1].value === grid[i][2].value
     ) {
-      indexes.push([i, 0], [i, 1], [i, 2]);
+      winner = grid[i][0].value;
+      position.push([i, 0], [i, 1], [i, 2]);
       break;
     }
   }
@@ -131,98 +153,140 @@ function checkVictory() {
     grid[0][0].value === grid[1][1].value &&
     grid[1][1].value === grid[2][2].value
   ) {
-    indexes.push([0, 0], [1, 1], [2, 2]);
+    winner = grid[0][0].value;
+    position.push([0, 0], [1, 1], [2, 2]);
   }
   if (
     grid[2][0].value !== '' &&
     grid[2][0].value === grid[1][1].value &&
     grid[1][1].value === grid[0][2].value
   ) {
-    indexes.push([2, 0], [1, 1], [0, 2]);
+    winner = grid[2][0].value;
+    position.push([2, 0], [1, 1], [0, 2]);
   }
-  return indexes.length > 0 ? indexes : false;
+
+  return { winner, position };
 }
 
-function getTranslucentColor(color) {
-  const [h, s, l] = color.match(/\d+/g);
+// check tie considering available cells
+function checkTie() {
+  return grid
+    .reduce((acc, curr) => [...acc, ...curr], [])
+    .every(({ value }) => value !== '');
+}
+
+// add a specific turn to the grid, and to the zdog illustration
+function addToGrid(turn, row, column) {
+  if (grid[row][column].value === '') {
+    // visual
+    const x = column * cellSize;
+    const y = row * cellSize;
+
+    const anchorCell = new Anchor({
+      addTo: anchorGrid,
+      translate: { x: x + cellSize / 2, y: y + cellSize / 2 },
+    });
+
+    if (turn === 'o') {
+      new Ellipse({
+        addTo: anchorCell,
+        diameter: cellSize / 2.3,
+        stroke: turnsStroke,
+        color: turnsColor[turn],
+      });
+    } else if (turn === 'x') {
+      new Shape({
+        addTo: anchorCell,
+        stroke: turnsStroke,
+        color: turnsColor[turn],
+        path: [
+          { x: -cellSize / 5, y: -cellSize / 5 },
+          { x: cellSize / 5, y: cellSize / 5 },
+        ],
+      });
+      new Shape({
+        addTo: anchorCell,
+        stroke: turnsStroke,
+        color: turnsColor[turn],
+        path: [
+          { x: cellSize / 5, y: -cellSize / 5 },
+          { x: -cellSize / 5, y: cellSize / 5 },
+        ],
+      });
+    }
+
+    // include the visual to later remove the graphic from the illustration
+    grid[row][column].value = turn;
+    grid[row][column].visual = anchorCell;
+  }
+}
+
+// return a semi-transparent version of the input color
+function getTranslucentHSL(hsl) {
+  const [h, s, l] = hsl.match(/\d+/g);
   return `hsla(${h}, ${s}%, ${l}%, 0.3)`;
 }
 
-element.addEventListener('click', e => {
-  if(!isAnimating) {
+// highlight the winning side including rectangles in the cells describing the winning combination
+function highlightWinner(winner, position) {
+  const color = getTranslucentHSL(turnsColor[winner]);
+  for (const [row, column] of position) {
+    new Rect({
+      addTo: grid[row][column].visual,
+      width: cellSize - gridStroke - 10,
+      height: cellSize - gridStroke - 10,
+      stroke: 0,
+      color,
+      fill: true,
+    });
+  }
+}
+
+// CLICK INTERACTION
+canvas.addEventListener('click', e => {
+  // prevent any action if the grid is being animated
+  if (!isAnimating) {
     if (isGameOver) {
+      // clear the grid if the game reached a conclusion
       clear();
     } else {
-      isCleared = false;
-  
+      // ! consider the fact that the grid is scaled down
       const { offsetX, offsetY } = e;
-      const paddingX = width * (1 - scale) / 2;
-      const paddingY = height * (1 - scale) / 2;
+      const paddingX = (width * (1 - gridScale)) / 2;
+      const paddingY = (height * (1 - gridScale)) / 2;
       const widthGrid = width - paddingX * 2;
       const heightGrid = height - paddingY * 2;
-  
-      if (!(offsetX < paddingX || offsetY < paddingY || offsetX > paddingX + widthGrid || offsetY > paddingY + heightGrid)) {
-        const column = Math.floor(((offsetX - paddingX) / widthGrid) * dimensions);
-        const row = Math.floor(((offsetY - paddingY) / heightGrid) * dimensions);
+
+      if (
+        !(
+          offsetX < paddingX ||
+          offsetY < paddingY ||
+          offsetX > paddingX + widthGrid ||
+          offsetY > paddingY + heightGrid
+        )
+      ) {
+        const column = Math.floor(
+          ((offsetX - paddingX) / widthGrid) * dimensions
+        );
+        const row = Math.floor(
+          ((offsetY - paddingY) / heightGrid) * dimensions
+        );
+        
         if (grid[row][column].value === '') {
-          const x = column * size;
-          const y = row * size;
-    
-          const anchorCell = new Anchor({
-            addTo: anchorGrid,
-            translate: { x: x + size / 2, y: y + size / 2 },
-          });
-    
-          if (turn === 'o') {
-            new Ellipse({
-              addTo: anchorCell,
-              diameter: size / 2.3,
-              stroke: stroke - 5,
-              color: colors[turn],
-            });
-          } else if (turn === 'x') {
-            new Shape({
-              addTo: anchorCell,
-              stroke: stroke - 5,
-              color: colors[turn],
-              path: [{ x: -size / 5, y: -size / 5 }, { x: size / 5, y: size / 5 }],
-            });
-            new Shape({
-              addTo: anchorCell,
-              stroke: stroke - 5,
-              color: colors[turn],
-              path: [{ x: size / 5, y: -size / 5 }, { x: -size / 5, y: size / 5 }],
-            });
-          }
-    
-          grid[row][column].value = turn;
-          grid[row][column].shape = anchorCell;
-    
-          const victoryIndexes = checkVictory();
-          if (victoryIndexes) {
-            const color = getTranslucentColor(colors[turn]);
-            for (const [row, column] of victoryIndexes) {
-              new Rect({
-                addTo: grid[row][column].shape,
-                width: size - stroke - 10,
-                height: size - stroke - 10,
-                stroke: 0,
-                color,
-                fill: true,
-              });
-            }
+          // add current turn
+          addToGrid(currentTurn, row, column);
+          // terminate the game for a victory, highlighting the winner
+          const { winner, position } = checkWinner();
+          if (winner) {
+            highlightWinner(winner, position);
             isGameOver = true;
-          } else {
-            const isDraw = grid
-              .reduce((acc, curr) => [...acc, ...curr], [])
-              .every(({ value }) => value !== '');
-    
-            if (isDraw) {
-              isGameOver = true;
-            }
           }
-    
-          turn = turn === 'o' ? 'x' : 'o';
+          // terminate the game for a tie
+          if (checkTie()) {
+            isGameOver = true;
+          }
+          // alternate the current turn
+          currentTurn = currentTurn === 'o' ? 'x' : 'o';
           illustration.updateRenderGraph();
         }
       }

@@ -1,8 +1,10 @@
 // SETUP
 const { Illustration, Anchor, Shape, Ellipse, Rect } = Zdog;
-const element = document.querySelector('canvas');
-const { width, height } = element;
 
+const canvas = document.querySelector('canvas');
+const { width, height } = canvas;
+
+const dimensions = 3;
 /* tic tac toe board
 [
   ["", "", ""],
@@ -10,7 +12,6 @@ const { width, height } = element;
   ["", "", ""]
 ]
 */
-const dimensions = 3;
 const grid = Array(dimensions)
   .fill()
   .map(() =>
@@ -18,30 +19,35 @@ const grid = Array(dimensions)
       .fill()
       .map(() => ({
         value: '',
-        shape: null,
+        visual: null,
       }))
   );
 
-// scale back the illustration to consider the rotation on three axes
-const scale = 0.7;
+// scale the illustration down to avoid cropping as the shapes are rotated on the x-y-z axes
+const gridScale = 0.7;
+const gridColor = 'hsl(220, 90%, 40%)';
+const gridStroke = 25;
+const cellSize = width / dimensions;
 
-const color = 'hsl(220, 90%, 40%)';
-const stroke = 25;
+const turnsColor = {
+  o: 'hsl(155, 80%, 45%)',
+  x: 'hsl(45, 100%, 65%)',
+};
+const turnsStroke = 20;
 
-// DEFAULT VISUALS
-// illustration
+// ZDOG ILLUSTRATION
 const illustration = new Illustration({
-  element,
-  scale,
+  element: canvas,
+  scale: gridScale,
 });
 
-// anchor point moving the shapes to the top left corner
+// add an anchor point to include shapes from the top left corner
 const anchorGrid = new Anchor({
   addTo: illustration,
   translate: { x: -width / 2, y: -height / 2, z: 0 },
 });
 
-// lines framing the grid
+// GRID LINES
 for (let dimension = 0; dimension <= dimensions; dimension += 1) {
   new Shape({
     addTo: anchorGrid,
@@ -49,8 +55,8 @@ for (let dimension = 0; dimension <= dimensions; dimension += 1) {
       { x: (dimension * width) / dimensions, y: 0 },
       { x: (dimension * width) / dimensions, y: height },
     ],
-    stroke,
-    color,
+    stroke: gridStroke,
+    color: gridColor,
   });
 
   new Shape({
@@ -59,23 +65,17 @@ for (let dimension = 0; dimension <= dimensions; dimension += 1) {
       { x: 0, y: (dimension * height) / dimensions },
       { x: width, y: (dimension * height) / dimensions },
     ],
-    stroke,
-    color,
+    stroke: gridStroke,
+    color: gridColor,
   });
 }
 
 illustration.updateRenderGraph();
 
-// PLAYER INTERACTION
-/* controlling variables to
-- avoid interaction as requestAnimationFrame animates the grid
-- avoid calling shape.remove() repeatedly
-- clear the board following a gameover
-*/
-let isAnimating = false;
-let isCleared = false;
+// GAMEPLAY
 let isGameOver = false;
-let animationFrameID = null;
+let isCleared = false;
+let isAnimating = false;
 
 // pick the player at random, the computer the opposing side
 let player = Math.random() > 0.5 ? 'o' : 'x';
@@ -87,39 +87,31 @@ let scores = {
   tie: 0,
 };
 
-const colors = {
-  o: 'hsl(155, 80%, 45%)',
-  x: 'hsl(45, 100%, 65%)',
-};
-const cellSize = width / dimensions;
-
-// the idea is to rotate the grid on the x,y,z axes incrementing/decrementing the matching rotation
+// CLEAR GRID
+// use requestAnimationFrame to rotate the grid around its center
+let animationFrameID = null;
 const directionRotation = {
   x: 1,
   y: 1,
   z: 1,
 };
 
-// function rotating the grid and removing existing shapes
-// ! call updateRenderGraph() to have the shapes match the final rotation
 function animateClear() {
   animationFrameID = requestAnimationFrame(animateClear);
+  illustration.updateRenderGraph();
   illustration.rotate.x += 0.02 * directionRotation.x;
   illustration.rotate.y += 0.02 * directionRotation.y;
   illustration.rotate.z += 0.02 * directionRotation.z;
-  illustration.updateRenderGraph();
-  // remove animation after a full rotation
   if (Math.abs(illustration.rotate.x) > Math.PI) {
     cancelAnimationFrame(animationFrameID);
     illustration.rotate.x = 0;
     illustration.rotate.y = 0;
     illustration.rotate.z = 0;
     illustration.updateRenderGraph();
-
-    // reset initial values
     isAnimating = false;
     isGameOver = false;
-    // reinitialize player and computer
+
+    // reinitialize player, computer and connected score values
     player = Math.random() > 0.5 ? 'o' : 'x';
     computer = player === 'o' ? 'x' : 'o';
     scores = {
@@ -128,12 +120,11 @@ function animateClear() {
       tie: 0,
     };
   } else if (!isCleared && Math.abs(illustration.rotate.x) > Math.PI / 2) {
-    // remove the shapes after half a rotation
     for (const row of grid) {
       for (const cell of row) {
-        if (cell.value && cell.shape) {
+        if (cell.value && cell.visual) {
           cell.value = '';
-          cell.shape.remove();
+          cell.visual.remove();
         }
       }
     }
@@ -141,20 +132,20 @@ function animateClear() {
   }
 }
 
-// clear the board by calling the function managing requestAnimationFrame
 function clear() {
-  // update the direction of the rotation for the available axes
   directionRotation.x = Math.random() > 0.5 ? 1 : -1;
   directionRotation.y = Math.random() > 0.5 ? 1 : -1;
   directionRotation.z = Math.random() > 0.5 ? 1 : -1;
+  isCleared = false;
   isAnimating = true;
   animateClear();
 }
 
-// return the winning side and the winning indexes
+// UTILITY FUNCTIONS
+// check winner returning the winning side and an array describing the winning combination
 function checkWinner() {
   let winner = null;
-  const indexes = [];
+  const position = [];
   for (let i = 0; i < dimensions; i += 1) {
     if (
       grid[0][i].value !== '' &&
@@ -162,7 +153,7 @@ function checkWinner() {
       grid[1][i].value === grid[2][i].value
     ) {
       winner = grid[0][i].value;
-      indexes.push([0, i], [1, i], [2, i]);
+      position.push([0, i], [1, i], [2, i]);
       break;
     }
     if (
@@ -171,7 +162,7 @@ function checkWinner() {
       grid[i][1].value === grid[i][2].value
     ) {
       winner = grid[i][0].value;
-      indexes.push([i, 0], [i, 1], [i, 2]);
+      position.push([i, 0], [i, 1], [i, 2]);
       break;
     }
   }
@@ -181,7 +172,7 @@ function checkWinner() {
     grid[1][1].value === grid[2][2].value
   ) {
     winner = grid[0][0].value;
-    indexes.push([0, 0], [1, 1], [2, 2]);
+    position.push([0, 0], [1, 1], [2, 2]);
   }
   if (
     grid[2][0].value !== '' &&
@@ -189,23 +180,23 @@ function checkWinner() {
     grid[1][1].value === grid[0][2].value
   ) {
     winner = grid[2][0].value;
-    indexes.push([2, 0], [1, 1], [0, 2]);
+    position.push([2, 0], [1, 1], [0, 2]);
   }
 
-  return { winner, indexes };
+  return { winner, position };
 }
 
-// return true if there are no available cells
+// check tie considering available cells
 function checkTie() {
   return grid
     .reduce((acc, curr) => [...acc, ...curr], [])
     .every(({ value }) => value !== '');
 }
 
-// add an 'x' or 'o' to the grid
-function addToGrid(row, column, turn) {
+// add a specific turn to the grid, and to the zdog illustration
+function addToGrid(turn, row, column) {
   if (grid[row][column].value === '') {
-    // Zdog illustration
+    // visual
     const x = column * cellSize;
     const y = row * cellSize;
 
@@ -218,14 +209,14 @@ function addToGrid(row, column, turn) {
       new Ellipse({
         addTo: anchorCell,
         diameter: cellSize / 2.3,
-        stroke: stroke - 5,
-        color: colors[turn],
+        stroke: turnsStroke,
+        color: turnsColor[turn],
       });
     } else if (turn === 'x') {
       new Shape({
         addTo: anchorCell,
-        stroke: stroke - 5,
-        color: colors[turn],
+        stroke: turnsStroke,
+        color: turnsColor[turn],
         path: [
           { x: -cellSize / 5, y: -cellSize / 5 },
           { x: cellSize / 5, y: cellSize / 5 },
@@ -233,8 +224,8 @@ function addToGrid(row, column, turn) {
       });
       new Shape({
         addTo: anchorCell,
-        stroke: stroke - 5,
-        color: colors[turn],
+        stroke: turnsStroke,
+        color: turnsColor[turn],
         path: [
           { x: cellSize / 5, y: -cellSize / 5 },
           { x: -cellSize / 5, y: cellSize / 5 },
@@ -242,58 +233,54 @@ function addToGrid(row, column, turn) {
       });
     }
 
-    // data structure
-    // storing a reference to the achor is necessary to later remove the shapes from the illustration
+    // include the visual to later remove the graphic from the illustration
     grid[row][column].value = turn;
-    grid[row][column].shape = anchorCell;
+    grid[row][column].visual = anchorCell;
   }
 }
 
-/* check a gameover and return
-- player or computer if either side won
-- 'tie' if there are no more cells available
-- null otherwise 
-*/
-
-// return a semitransparent version of the input hsl color
-function getTransluentHSL(hsl) {
+// return a semi-transparent version of the input color
+function getTranslucentHSL(hsl) {
   const [h, s, l] = hsl.match(/\d+/g);
   return `hsla(${h}, ${s}%, ${l}%, 0.3)`;
 }
 
-// highlight the winner with rectangles for the winning combination
-function highlightWinner(winner, indexes) {
-  const colorWinner = getTransluentHSL(colors[winner]);
-  for (const [row, column] of indexes) {
+// highlight the winning side including rectangles in the cells describing the winning combination
+function highlightWinner(winner, position) {
+  const color = getTranslucentHSL(turnsColor[winner]);
+  for (const [row, column] of position) {
     new Rect({
-      addTo: grid[row][column].shape,
-      width: cellSize - stroke - 10,
-      height: cellSize - stroke - 10,
+      addTo: grid[row][column].visual,
+      width: cellSize - gridStroke - 10,
+      height: cellSize - gridStroke - 10,
       stroke: 0,
-      color: colorWinner,
+      color,
       fill: true,
     });
   }
 }
 
 // COMPUTER AI
+// pick a cell at random from the available set
 function randomMove() {
-  const indexes = [];
+  const positions = [];
   for (let row = 0; row < dimensions; row += 1) {
     for (let column = 0; column < dimensions; column += 1) {
       if (grid[row][column].value === '') {
-        indexes.push([row, column]);
+        positions.push([row, column]);
       }
     }
   }
 
-  const randomIndex = Math.floor(Math.random() * indexes.length);
-  return indexes[randomIndex];
+  return positions[Math.floor(Math.random() * positions.length)];
 }
 
+// compute the score with the minimax algorithm
 function minimax(board, depth, isMaximising) {
   const { winner } = checkWinner();
   if (winner) {
+    // ! use the depth to weigh the score
+    // the idea is to attribute a higher score to victories achieved early
     return scores[winner] / depth;
   }
 
@@ -326,6 +313,7 @@ function minimax(board, depth, isMaximising) {
   return bestScore;
 }
 
+// pick the cell describing the best move
 function bestMove() {
   let bestScore = -Infinity;
   let move = [];
@@ -347,18 +335,18 @@ function bestMove() {
 }
 
 // CLICK INTERACTION
-// consider player and computer in succession
-element.addEventListener('click', e => {
+// have the computer play immediately after the player
+canvas.addEventListener('click', e => {
+  // prevent any action if the grid is being animated
   if (!isAnimating) {
     if (isGameOver) {
+      // clear the grid if the game reached a conclusion
       clear();
     } else {
-      isCleared = false;
-
-      // ! consider the fact that the canvas is scaled back
+      // ! consider the fact that the grid is scaled down
       const { offsetX, offsetY } = e;
-      const paddingX = (width * (1 - scale)) / 2;
-      const paddingY = (height * (1 - scale)) / 2;
+      const paddingX = (width * (1 - gridScale)) / 2;
+      const paddingY = (height * (1 - gridScale)) / 2;
       const widthGrid = width - paddingX * 2;
       const heightGrid = height - paddingY * 2;
 
@@ -379,20 +367,26 @@ element.addEventListener('click', e => {
         );
 
         if (grid[row][column].value === '') {
-          // PLAYER
-          addToGrid(row, column, player);
-          const { winner, indexes } = checkWinner();
+          // add player turn
+          addToGrid(player, row, column);
+          // terminate the game for a victory, highlighting the winner
+          const { winner, position } = checkWinner();
           if (winner) {
-            highlightWinner(winner, indexes);
+            highlightWinner(winner, position);
             isGameOver = true;
           } else if (checkTie()) {
+            // terminate the game for a tie
             isGameOver = true;
           } else {
-            // COMPUTER
+            // computer turn
             // const [rowComputer, columnComputer] = randomMove(); // pick at random
-            const [rowComputer, columnComputer] = bestMove(); // pick through the minimax function
-            addToGrid(rowComputer, columnComputer, computer);
-            const { winner: winnerComputer, indexes: indexesComputer } = checkWinner();
+            const [rowComputer, columnComputer] = bestMove(); // pick through the minimax algorithm
+            addToGrid(computer, rowComputer, columnComputer);
+            // repeat the same checkup for the victory/tie on the computer side
+            const {
+              winner: winnerComputer,
+              position: indexesComputer,
+            } = checkWinner();
             if (winnerComputer) {
               highlightWinner(winnerComputer, indexesComputer);
               isGameOver = true;
