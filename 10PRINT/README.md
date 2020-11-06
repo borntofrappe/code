@@ -1,3 +1,5 @@
+# 10PRINT
+
 [10 print](https://10print.org/) relates to a program which continuously render one of two characters, and in so doing creating a creative pattern.
 
 With this project I set out to explore the concept starting from [a coding challenge](https://thecodingtrain.com/CodingChallenges/076-10print.html) from [The Coding Train](https://thecodingtrain.com/).
@@ -39,7 +41,7 @@ _Please note_: `clearRect` is necessary to avoid drawing the lines above the pre
 context.clearRect(0, 0, width, height);
 ```
 
-## [Rain](https://codepen.io/borntofrappe/full/OJXNgeg)
+## Rain
 
 With `rain.html` I take the _10 print_ concept and use it to simulate rain. This is possible by having the conditional draw a line only if the condition resolves to `true`, without specifying an `else` statement.
 
