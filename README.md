@@ -27,3 +27,7 @@ Program a game between two human players and a game against computer AI.
 **Keywords**: JavaScript, minimax algorithm, [Zdog](https://zzz.dog/)
 
 **Live demo(s)**: [Tic Tac Zdog](https://codepen.io/borntofrappe/pen/wvWEmOy), [Tic Tac Minimax Toe](https://codepen.io/borntofrappe/pen/RwRYMOp)
+
+## Mazes
+
+Implement a series of algorithms to design twisty little passageways.
