@@ -31,3 +31,5 @@ Program a game between two human players and a game against computer AI.
 ## Mazes
 
 Implement a series of algorithms to design twisty little passageways.
+
+**Keywords**: Lua, Love2D, algorithms
