@@ -1,4 +1,4 @@
-# code
+![github.com/borntofrappe/code](https://github.com/borntofrappe/code/blob/master/banner.svg)
 
 With this repository I set out to explore a variety of topics through code. Code meaning HTML, CSS, JavaScript, but also Lua, C++, and all possible utilities designed around these languages.
 
