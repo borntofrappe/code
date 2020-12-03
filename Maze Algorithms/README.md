@@ -1,8 +1,8 @@
-# Mazes
+# Maze Algorithms
 
-Here you find a plethora of projects connected to mazes. Mazes with different algorithms, mazes with different shapes. The projects use _Lua_ as a programming language, _Love2D_ as a game engineto display the end result. However, the underlying concepts are not restricted to either utility. Immediately, I can think of using JavaScript and the Canvas API for a web-based alternative.
+Here you find a plethora of projects connected to mazes. The demos use _Lua_ as a programming language, _Love2D_ as a game engine to display the end result, but the underlying concepts are not restricted to either utility (consider using JavaScript and the Canvas API for a web-based alternative).
 
-## Binary Tree
+## [Binary Tree](https://repl.it/@borntofrappe/maze-binary-tree)
 
 The algorithm works by visiting every cell of a grid once, and removing a gate east or north. Without creating any exit, the end result is that the maze has an uninterrupted corridor in the first row and in the last column.
 
@@ -50,7 +50,7 @@ In the logic of the specific algorithm, each cell has at most two neighbors:
 
 With this setup, all that is necessary is to loop through the `cells` table, pick a neighbor from the available set and remove the connected gates.
 
-## Sidewinder
+## [Sidewinder](https://repl.it/@borntofrappe/maze-sidewinder)
 
 The algorithm works similarly to the binary tree algorithm, which means each cell has still up to two neighbors, east or north. When selecting a neighbor north however, the connection is removed from a cell visited in the current row, and not immediately from the current cell.
 
@@ -106,7 +106,7 @@ else
 end
 ```
 
-## Simplified Dijsktra
+## [Simplified Dijsktra](https://repl.it/@borntofrappe/maze-simplified-dijkstra)
 
 This is a first attempt at describing the distance between a point and any other point in the grid. The demo waits for a key press on the enter key, and then proceeds to populate the grid with the distance from the selected cell.
 
@@ -211,7 +211,7 @@ grid.cells[cell.column][cell.row].distance = distance
 
 _Please note_: to illustrate the process of the algorithm, I decided to include a `Timer` utility and have each function call delayed by an arbitrary number of seconds.
 
-## Aldous Broder
+## [Aldous Broder](https://repl.it/@borntofrappe/maze-aldous-broder)
 
 Aldous Broder produces a maze without bias, completely random. This comes at the price of a slower runtime however, as the algorithm visits individual cells more than once.
 
@@ -279,7 +279,7 @@ if allVisited then
 end
 ```
 
-## Wilson
+## [Wilson](https://repl.it/@borntofrappe/maze-wilson)
 
 Instead of a purely random walk, such as the one described in Aldous Broder, Wilson's approach leverages a "loop-erased" random walk.
 
@@ -303,7 +303,7 @@ The idea is to:
 
 At first, there is only one visited cell, which means the random walk might take some time to remove any gate. As you progress and find visited cells, however it becomes easier and easier to find a path.
 
-## Hunt and Kill
+## [Hunt and Kill](https://repl.it/@borntofrappe/maze-hunt-and-kill)
 
 The algorithm is similar to Aldous-Broder, performing a random walk from cell to cell. However, the algorithm changes in the moment it finds a cell which has already been visited. In this instance, it performs a search, it hunts, for an unvisited cell with a visited neighbor.
 
@@ -327,7 +327,7 @@ In detailed steps:
 
 - end the random walk when every cell has been visited
 
-## Recursive Backtracker
+## [Recursive Backtracker](https://repl.it/@borntofrappe/maze-recursive-backtracker)
 
 The algorithm is similar to Hunt and Kill (and therefore Aldous-Broder), but it does differ in the way it seeks an unvisited cell. Finding a visited cell, the idea is to go through the previous cells, to backtrack the beaten path, and look for unvisited neighbors cell by cell.
 
