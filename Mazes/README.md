@@ -105,3 +105,109 @@ else
   neighboringCell.gates[connection.gates[2]] = nil
 end
 ```
+
+## Simplified Dijsktra
+
+This is a first attempt at describing the distance between a point and any other point in the grid. The demo waits for a key press on the enter key, and then proceeds to populate the grid with the distance from the selected cell.
+
+Building on top of the code for the sidewinder algorithm, the demo adds a field to the `Cell` class to describe the cell's distance.
+
+```lua
+function Cell:new()
+  this = {
+    -- previous attributes
+    ["distance"] = nil
+  }
+
+end
+```
+
+Initialized at `nil`, this value is eventually included through the `dijkstra` function, and printed in the center of the cell.
+
+```lua
+function Cell:render()
+  -- draw gates
+
+  if self.distance then
+    love.graphics.printf(self.distance, self.x0, self.y0 + self.height / 2 - 4, self.width, "center")
+  end
+end
+```
+
+With this setup, the `dijkstra` function is created in `main.lua` with two parameters: `cell` and `distance`. The idea is to:
+
+- mark the cell with the integer describing the distance
+
+```lua
+grid.cells[cell.column][cell.row].distance = distance
+```
+
+- look for available, neighboring cells
+
+  To this end, the function creates a table describing the neighbors on all possible sides.
+
+  ```lua
+  local neighbors = {
+    {
+      ["gate"] = "up",
+      ["dr"] = -1,
+      ["dc"] = 0
+    },
+    {
+      ["gate"] = "right",
+      ["dr"] = 0,
+      ["dc"] = 1
+    },
+    {
+      ["gate"] = "down",
+      ["dr"] = 1,
+      ["dc"] = 0
+    },
+    {
+      ["gate"] = "left",
+      ["dr"] = 0,
+      ["dc"] = -1
+    }
+  }
+  ```
+
+  Looping through the table, the idea is to then remove unavailable neighbors.
+
+  Neighbors which exceed the grid.
+
+  ```lua
+  if
+    not grid.cells[cell.column + neighbor.dc]
+    or
+    not grid.cells[cell.column + neighbor.dc][cell.row + neighbor.dr] then
+    table.remove(neighbors, i)
+  end
+  ```
+
+  Neighbors blocked by a gate.
+
+  ```lua
+  if cell.gates[neighbor.gate] then
+    table.remove(neighbors, i)
+  end
+  ```
+
+  Neighbors with a distance value, to avoid an infinite loop.
+
+  ```lua
+  if grid.cells[cell.column + neighbor.dc][cell.row + neighbor.dr].distance then
+    table.remove(neighbors, i)
+  end
+  ```
+
+- Tloop through the table of available neighbors, and call the `dijkstra` function once more. This time however, using the neighboring cell as a reference, and an incremented distance value.
+
+  ```lua
+  for i, neighbor in ipairs(neighbors) do
+    local neighboringCell = grid.cells[cell.column + neighbor.dc][cell.row + neighbor.dr]
+
+    dijkstra(neighboringCell, distance + 1)
+  end
+  ```
+
+_Please note_: to illustrate the process of the algorithm, I decided to include a `Timer` utility and have each function call delayed by an arbitrary number of seconds.
