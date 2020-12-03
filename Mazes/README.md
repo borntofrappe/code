@@ -118,7 +118,6 @@ function Cell:new()
     -- previous attributes
     ["distance"] = nil
   }
-
 end
 ```
 
@@ -211,3 +210,71 @@ grid.cells[cell.column][cell.row].distance = distance
   ```
 
 _Please note_: to illustrate the process of the algorithm, I decided to include a `Timer` utility and have each function call delayed by an arbitrary number of seconds.
+
+## Aldous Broder
+
+Aldous Broder produces a maze without bias, completely random. This comes at the price of a slower runtime however, as the algorithm visits individual cells more than once.
+
+The idea is to have the `Cell` class with an additional field, detailing whether or not the cell has already been visited.
+
+```lua
+function Cell:new()
+  this = {
+    -- previous attributes
+    ["visited"] = nil
+  }
+end
+```
+
+Initialized with `nil`, the value is set to `true` as the algorithm reaches the cell.
+
+With this setup, the algorithm marks a cell as visited, and proceeds with a random walk.
+
+```lua
+local randomColumn = love.math.random(self.columns)
+local randomRow = love.math.random(self.rows)
+local cell = self.cells[randomColumn][randomRow]
+cell.visited = true
+
+while true
+ -- random walk
+ break
+end
+```
+
+In the random walk, the idea is to pick a neighbor at random, and remove the connecting gate only if said neighbor has not been visited.
+
+```lua
+local neighboringCell = self.cells[connection.column][connection.row]
+if not neighboringCell.visited then
+  -- remove gate
+end
+```
+
+If the neighbor has already been visited, however, the idea is to do nothing but continue the random walk from the neighboring cell.
+
+```lua
+cell = neighboringCell
+```
+
+This process continues until every cell has been visited. This is checked with a boolean, initialized at `true` and toggled to `false` as soon as the for loop finds an unvisited cell.
+
+```lua
+local allVisited = true
+for column = 1, self.columns do
+  for row = 1, self.rowss do
+    if not self.cells[column][row].visited then
+      allVisited = false
+      break
+    end
+  end
+end
+```
+
+Past the for loop, if `allVisited` is still `true`, the idea is to finally exit the while loop describing the random walk.
+
+```lua
+if allVisited then
+  break
+end
+```
