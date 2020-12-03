@@ -302,3 +302,27 @@ The idea is to:
 - repeat the random walk until every cell has been visited
 
 At first, there is only one visited cell, which means the random walk might take some time to remove any gate. As you progress and find visited cells, however it becomes easier and easier to find a path.
+
+## Hunt and Kill
+
+The algorithm is similar to Aldous-Broder, performing a random walk from cell to cell. However, the algorithm changes in the moment it finds a cell which has already been visited. In this instance, it performs a search, it hunts, for an unvisited cell with a visited neighbor.
+
+In detailed steps:
+
+- pick a cell and mark it as visited
+
+- pick a neighbor at random
+
+- if the neighbor has not already been visited, visit the cell and continue the random walk
+
+- if the neighbor has already been visited, hunt for an unvisited cel
+
+  - loop through the grid top to bottom, left to right
+
+  - look for the first unvisited cell with visited neighbor(s)
+
+  - connect the cell with one of its neighbors
+
+  - resume the random walk from the cell
+
+- end the random walk when every cell has been visited
