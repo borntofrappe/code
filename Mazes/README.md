@@ -278,3 +278,27 @@ if allVisited then
   break
 end
 ```
+
+## Wilson
+
+Instead of a purely random walk, such as the one described in Aldous Broder, Wilson's approach leverages a "loop-erased" random walk.
+
+The idea is to:
+
+- pick a cell at random and visit it
+
+- pick an unvisited cell, and take note of its position
+
+- from the still unvisited cell, start a random walk; in this walk
+
+  - pick a neighbor at random, once again taking note of its position
+
+  - if the neighbor is already noted in the random walk, start the walk anew
+
+  - if the neighbor is visited, terminate the random walk
+
+- visit every cell described in the random walk, and remove the gates connecting them together
+
+- repeat the random walk until every cell has been visited
+
+At first, there is only one visited cell, which means the random walk might take some time to remove any gate. As you progress and find visited cells, however it becomes easier and easier to find a path.
