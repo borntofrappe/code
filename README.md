@@ -35,3 +35,7 @@ Implement a series of algorithms to design twisty little passageways.
 **Keywords**: Lua, Love2D, algorithms
 
 **Live demo(s)**: [Binary Tree](https://repl.it/@borntofrappe/maze-binary-tree), [Sidewinder](https://repl.it/@borntofrappe/maze-sidewinder), [Simplified Dijkstra](https://repl.it/@borntofrappe/maze-simplified-dijkstra), [Adlous Broder](https://repl.it/@borntofrappe/maze-aldous-broder), [Wilson](https://repl.it/@borntofrappe/maze-wilson), [Hunt and Kill](https://repl.it/@borntofrappe/maze-hunt-and-kill), [Recursive Backtracker](https://repl.it/@borntofrappe/maze-recursive-backtracker)
+
+## Maze Shapes
+
+Apply the recursive backtracker algorithm to to mazes of different shape.
