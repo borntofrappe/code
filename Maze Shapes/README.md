@@ -110,3 +110,54 @@ table.insert(
 ```
 
 _Please note_: the rings have an equal number of slices, which leads to the maze having a rather uneven structure. This is fixed in a different demo fully implementing an adaptive grid. I decided to preserve this project as well to illustrate how the code changes from the regular grid demos.
+
+## Polar Adaptive Grid
+
+Building on top of the previous project, the demo tries to render a more realistic maze, one in which the cells are not excessively disparate in size. This is achieved by doubling the number of slices every other ring.
+
+```lua
+if ring % 2 == 0 then
+  ringCells = ringCells * 2
+end
+```
+
+This measure is then used not only to describe how many arcs should be in the specific ring, but also the angle of the mentioned arcs.
+
+```lua
+local angle = 2 * math.pi / ringCells
+
+for ringCell = 1, ringCells do
+  -- add slice
+end
+```
+
+This takes care of populating a grid with more cells as the structure progresses outwards. It does not, however, solve the way the recursive backtracker algorithm works. Now the cells are allowed to have more than a single neighbor in the outer ring, and the `neighbors` table needs to be adjusted accordingly.
+
+```lua
+if ring % 2 ~= 0 then
+  table.insert(
+    neighbors,
+    {
+      ["ring"] = ring + 1,
+      ["ringCell"] = ringCell - 1,
+      ["gates"] = {"up", "down"}
+    }
+  )
+end
+```
+
+The idea is to consider two neighbors in the outer ring. Since the the number of cells in ring changes however, it is necessary to double the counter variable.
+
+```lua
+if ring % 2 ~= 0 then
+  ringCellNeighbor = ringCellNeighbor * 2 - 1
+end
+```
+
+This takes care of the outer ring. However, going inwards, it is necessary to consider the instance in which the destination ring has half the number of arcs. In this instance, and conversely to the previous operation, the counter is halved.
+
+```lua
+ if ring % 2 == 0 then
+  ringCellNeighbor = math.ceil(ringCellNeighbor / 2)
+end
+```
