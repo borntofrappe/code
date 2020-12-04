@@ -2,13 +2,13 @@
 
 Here you find a few projects connected to mazes. Consider it a spiritual successor to _Maze Algorithms_, the project folder where I explored different algorithms with _Lua_ and _Love2D_.
 
-## Grid
+## Regular Grid
 
 This demo introduces the shape already developed in the _Maze Algorithm_ folder. The grid is represented by a series of columns and rows, where each cell has up to four neighbors. The algorithms walks through the grid removing gates until every cell is visited.
 
 ## Grid Masking
 
-The idea is to modify the regular shape by essentially "turning off" cells from the grid. A few cells are initialized to `nil`, and are removed from the possible neighbors. With this setup, all that the algorithm needs is picking a valid cell as a starting point.
+The idea is to modify the regular, rectangular shape by essentially "turning off" cells from the grid. A few cells are initialized to `nil`, and are removed from the possible neighbors. With this setup, all that the algorithm needs is picking a valid cell as a starting point.
 
 The changes are introduced in `Grid.lua`. Here, the cells are included in the grid on the basis of a rough ASCII sketch.
 
@@ -64,3 +64,49 @@ while not randomCell do
   randomCell = self.cells[randomColumn][randomRow]
 end
 ```
+
+## Polar Grid
+
+The demo works as an introduction to circular mazes. The idea is to use polar coordinates and `love.graphics.arc` to draw cells as slices of circles with expanding radii. The function accepts an optional second argument for the arc type which embodies the desired result.
+
+```lua
+love.graphics.arc("line", "open", 0, 0, 20, 0, math.pi / 2)
+```
+
+Without specifying the type as `open`, the result is that the function draws two straight lines connecting the arc to the center of the grid.
+
+Past this detail, the gates are drawn with four distinct instructions. The arc function describes the "up" and "down" variant, using the value described by the inner and outer radius.
+
+```lua
+if self.gates.up then
+  love.graphics.arc("line", "open", 0, 0, self.outerRadius, self.angleStart, self.angleEnd)
+end
+
+if self.gates.down then
+  love.graphics.arc("line", "open", 0, 0, self.innerRadius, self.angleStart, self.angleEnd)
+end
+```
+
+The "left" and "right" gates are instead drawn with straight lines, connecting the space between the two arcs. The cartesian coordinates are computed for each cell using `math.cos` and `math.sin`. For instance and for right side, the coordinates consider the angle describing where the arc should end.
+
+```lua
+local x3 = innerRadius * math.cos(angleEnd)
+local y3 = innerRadius * math.sin(angleEnd)
+local x4 = outerRadius * math.cos(angleEnd)
+local y4 = outerRadius * math.sin(angleEnd)
+```
+
+The structure of the grid is modified from one using columns and rows to one using rings and ring cells. The neighbors are included so that the grid essentially "wraps" around, so that each cell has always a neighbor on its left and right. For the right side, for instance, the variable `ringCell` is set to `1` to have the last cell in each ring refer to the first one.
+
+```lua
+table.insert(
+  neighbors,
+  {
+    ["ring"] = ring,
+    ["ringCell"] = ringCell + 1 > ringCells and 1 or ringCell + 1,
+    ["gates"] = {"right", "left"}
+  }
+)
+```
+
+_Please note_: the rings have an equal number of slices, which leads to the maze having a rather uneven structure. This is fixed in a different demo fully implementing an adaptive grid. I decided to preserve this project as well to illustrate how the code changes from the regular grid demos.

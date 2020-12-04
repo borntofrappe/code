@@ -8,7 +8,7 @@ COLUMNS = 10
 ROWS = 10
 
 function love.load()
-  love.window.setTitle("Grid")
+  love.window.setTitle("Regular Grid")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
 
