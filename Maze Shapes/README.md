@@ -161,3 +161,11 @@ This takes care of the outer ring. However, going inwards, it is necessary to co
   ringCellNeighbor = math.ceil(ringCellNeighbor / 2)
 end
 ```
+
+## Hex Grid
+
+Sigma mazes.
+
+Regular hexagons.
+
+Six possible neighbors, whose connections change depending on the odd/even nature of the column.
