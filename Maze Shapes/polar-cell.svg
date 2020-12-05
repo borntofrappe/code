@@ -1,14 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-25 -60 100 100" width="200" height="200">
-  <g fill="currentColor" font-size="7">
-    <text x="-5" y="-10" text-anchor="middle">(x1, y1)</text>
-    <text y="10" text-anchor="middle">(x3, y3)</text>
-    <text x="35" y="-40" text-anchor="middle">(x2, y2)</text>
-    <text x="50" y="10" text-anchor="middle">(x4, y4)</text>
-    <text x="50" y="-20"><tspan>outer</tspan><tspan dx="-10" dy="7.5">radius</tspan></text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -60 100 100" width="200" height="200">
+  <g fill="currentColor" >
+    <circle r="2" cx="10" />
+    <circle r="2" cx="55" />
+    <circle r="2" transform="rotate(-45) translate(10 0)" />
+    <circle r="2" transform="rotate(-45) translate(55 0)" />
+    <g font-size="7">
+      <g text-anchor="middle">
+        <text x="-2.5" y="-12.5">(x1, y1)</text>
+        <text x="20" y="10">(x3, y3)</text>
+        <text x="37.5" y="-45">(x2, y2)</text>
+        <text x="55" y="10">(x4, y4)</text>
+      </g>
+      <text x="55" y="-20"><tspan>outer</tspan><tspan dx="-10" dy="7.5">radius</tspan></text>
+      <text x="-15"><tspan>inner</tspan><tspan dx="-10" dy="7.5">radius</tspan></text>
+      <text x="15" y="-5">angle</text>
+    </g>
   </g>
   <g fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M 0 0 h 50" />
-    <path d="M 0 0 l 35 -35" />
-    <path d="M 50 0 a 50 50 0 0 0 -100 0" pathLength="1" stroke-dasharray="0.25 0.75" />
+    <path d="M 10 0 L 55 0" />
+    <path transform="rotate(-45)" d="M 10 0 L 55 0" />
+    <path d="M 55 0 a 55 55 0 0 0 -110 0" pathLength="1" stroke-dasharray="0.25 0.75" />
+    <path d="M 10 0 a 10 10 0 0 0 -20 0" pathLength="1" stroke-dasharray="0.25 0.75" />
   </g>
 </svg>

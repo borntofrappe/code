@@ -1,6 +1,6 @@
 # Maze Shapes
 
-Here you find a few projects connected to mazes. Consider it a spiritual successor to _Maze Algorithms_, the project folder where I explored different algorithms with _Lua_ and _Love2D_.
+Here you find a few projects connected to mazes of different shapes. Consider it a spiritual successor to _Maze Algorithms_, the project folder where I explored different algorithms with _Lua_ and _Love2D_.
 
 ## Regular Grid
 
@@ -67,7 +67,7 @@ end
 
 ## [Polar Grid](https://repl.it/@borntofrappe/maze-polar-grid)
 
-The demo works as an introduction to circular mazes. The idea is to use polar coordinates and `love.graphics.arc` to draw cells as slices of circles with expanding radii. The function accepts an optional second argument for the arc type which embodies the desired result.
+The idea is to use polar coordinates and `love.graphics.arc` to draw cells as slices of circles with expanding radii. The function accepts an optional second argument for the arc type which embodies the desired result.
 
 ```lua
 love.graphics.arc("line", "open", 0, 0, 20, 0, math.pi / 2)
@@ -79,7 +79,7 @@ Past this detail, the gates are drawn with four distinct instructions.
 
 Consider this arbitrary structure as a reference.
 
-![Polar Cell](https://github.com/borntofrappe/code/tree/master/Maze%20Shapes/polar-cell.svg)
+![Polar Cell](https://github.com/borntofrappe/code/blob/master/Maze%20Shapes/polar-cell.svg)
 
 The arc function describes the "up" and "down" variant, using the value described by the inner and outer radius.
 
@@ -102,7 +102,7 @@ local x4 = outerRadius * math.cos(angleEnd)
 local y4 = outerRadius * math.sin(angleEnd)
 ```
 
-The structure of the grid is modified from one using columns and rows to one using rings and ring cells. The neighbors are included so that the grid essentially "wraps" around, so that each cell has always a neighbor on its left and right. For the right side, for instance, the variable `ringCell` is set to `1` to have the last cell in each ring refer to the first one.
+In `Grid.lua`, the structure of the grid is modified from one using columns and rows to one using rings and ring cells. The neighbors are included so that the grid essentially "wraps" around, so that each cell has always a neighbor on its left and right. For the right side, for instance, the variable `ringCell` is set to `1` to have the last cell in each ring refer to the first one.
 
 ```lua
 table.insert(
@@ -115,7 +115,7 @@ table.insert(
 )
 ```
 
-_Please note_: the rings have an equal number of slices, which leads to the maze having a rather uneven structure. This is fixed in a different demo fully implementing an adaptive grid. I decided to preserve this project as well to illustrate how the code changes from the regular grid demos.
+_Please note_: the rings have an equal number of slices, which leads to the maze having a rather uneven structure. This is fixed in a different demo implementing an adaptive grid. I decided to preserve this project as well to illustrate how the code changes from the regular, rectangular grid.
 
 ## [Polar Adaptive Grid](https://repl.it/@borntofrappe/maze-polar-adaptive-grid)
 
@@ -170,15 +170,15 @@ end
 
 ## [Hex Grid](https://repl.it/@borntofrappe/maze-hex-grid)
 
-In terms of algorithm, the `recursiveBacktracker` function developed for the previous projects remains unchanged. The logic is to visit the grid until every cell has been visited, and to access the cells neighbor by neighbor. What changes, similarly to the polar grid, is the neighbors of the individual cells. In the regular grid there are up to four neighbors, in the polar adaptive grid up to five and here up to six. Consiedr the hexagon at the center of this basic illustration.
+Similarly to the polar grid, what changes to create a hexagon grid is how each cell is rendered and which neighbor is assigned to the cell. In the regular grid there are up to four neighbors, in the polar adaptive grid up to five and here up to six. Consider the hexagon at the center of this basic illustration.
 
-![Hexagon Grid](https://github.com/borntofrappe/code/tree/master/Maze%20Shapes/hexagon-grid.svg)
+![Hexagon Grid](https://github.com/borntofrappe/code/blob/master/Maze%20Shapes/hexagon-grid.svg)
 
 In this light, each cell is allowed to have six neighbors: north, north-east, south-east, south, south-west, north-west. The biggest challenge is to then ensure that the cells are attributed the correct neighbors. For instance, and considering the topmost cell in the illustration, this one has but three neighbors.
 
 In `Grid.lua`, the hexagons are laid out as in the following structure.
 
-![Hexagon Grid — Rows and Columns](https://github.com/borntofrappe/code/tree/master/Maze%20Shapes/hexagon-rows-columns.svg)
+![Hexagon Grid — Rows and Columns](https://github.com/borntofrappe/code/blob/master/Maze%20Shapes/hexagon-rows-columns.svg)
 
 This structure changes the way cells access neighbors. Odd-numbered columns, for instance, have south-east neighbors in the same row (consider the cell `(1,1)`), while even-numbered columns need to consider the row directly below (consider the cell `(2,1)`).
 
@@ -186,7 +186,7 @@ The illustration should explain the different `if` statements used to populate t
 
 In `Cell.lua` a regular hexagon is computed starting from the length of the side described by the `CELL_SIDE` constant. The math involved can be explained by this illustration.
 
-![Hexagon Cell](https://github.com/borntofrappe/code/tree/master/Maze%20Shapes/hexagon-cell.svg)
+![Hexagon Cell](https://github.com/borntofrappe/code/blob/master/Maze%20Shapes/hexagon-cell.svg)
 
 The coordinates of the vertices are computed from the value of the segments `a` and `b`, and knowing the following relationships with the side.
 
@@ -194,3 +194,37 @@ The coordinates of the vertices are computed from the value of the segments `a` 
 a = side / 2
 b = side * math.sqrt(3) / 2
 ```
+
+## [Triangle Grid](https://repl.it/@borntofrappe/maze-triangle-grid)
+
+Exactly like the hexagon grid, what changes in the demo is the shape of a cell and its possible neighbors. Triangles are alternated as in the following visual.
+
+![Triangle Row](https://github.com/borntofrappe/code/blob/master/Maze%20Shapes/triangle-rows-columns.svg)
+
+This means the neighbors depend on whether or not the triangles are upright. If upright, the cell has a neighbor south, otherwise a neighbor north. The `if` statements consider this eventuality as well as the contours of the grid itself. For instance a neighbor north is only possible if the cell is not in the first row, and it is indeed upright.
+
+```lua
+if row > 1 then
+  if not isUpright then
+    table.insert(
+      neighbors,
+      {
+        ["column"] = column,
+        ["row"] = row - 1,
+        ["gates"] = {"north", "south"}
+      }
+    )
+  end
+end
+```
+
+In `Cell.lua`, whether a triangle is upright or not changes the way the triangle is drawn. The vertices are drawn starting from the length of the triangle side, knowing that the width and height are computed as follows.
+
+```code
+width = side
+height = side * math.sqrt(3) / 2
+```
+
+Consier this visual as a reference.
+
+![Triangle Cell](https://github.com/borntofrappe/code/blob/master/Maze%20Shapes/triangle-cell.svg)

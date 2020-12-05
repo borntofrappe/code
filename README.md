@@ -38,6 +38,6 @@ Implement a series of algorithms to design twisty little passageways.
 
 ## Maze Shapes
 
-Apply the recursive backtracker algorithm to to mazes of different shape.
+Implement the recursive backtracker algorithm with mazes of different shape.
 
-**Live demo(s)**: [Grid Masking](https://repl.it/@borntofrappe/maze-grid-masking), [Polar Grid](https://repl.it/@borntofrappe/maze-polar-grid), [Polar Adaptive Grid](https://repl.it/@borntofrappe/maze-polar-adaptive-grid), [Hex Grid](https://repl.it/@borntofrappe/maze-hex-grid)
+**Live demo(s)**: [Grid Masking](https://repl.it/@borntofrappe/maze-grid-masking), [Polar Grid](https://repl.it/@borntofrappe/maze-polar-grid), [Polar Adaptive Grid](https://repl.it/@borntofrappe/maze-polar-adaptive-grid), [Hex Grid](https://repl.it/@borntofrappe/maze-hex-grid), [Triangle Grid](https://repl.it/@borntofrappe/maze-triangle-grid)
