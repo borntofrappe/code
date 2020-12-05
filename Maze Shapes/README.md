@@ -6,7 +6,7 @@ Here you find a few projects connected to mazes. Consider it a spiritual success
 
 This demo introduces the shape already developed in the _Maze Algorithm_ folder. The grid is represented by a series of columns and rows, where each cell has up to four neighbors. The algorithms walks through the grid removing gates until every cell is visited.
 
-## Grid Masking
+## [Grid Masking](https://repl.it/@borntofrappe/maze-grid-masking)
 
 The idea is to modify the regular, rectangular shape by essentially "turning off" cells from the grid. A few cells are initialized to `nil`, and are removed from the possible neighbors. With this setup, all that the algorithm needs is picking a valid cell as a starting point.
 
@@ -65,7 +65,7 @@ while not randomCell do
 end
 ```
 
-## Polar Grid
+## [Polar Grid](https://repl.it/@borntofrappe/maze-polar-grid)
 
 The demo works as an introduction to circular mazes. The idea is to use polar coordinates and `love.graphics.arc` to draw cells as slices of circles with expanding radii. The function accepts an optional second argument for the arc type which embodies the desired result.
 
@@ -130,7 +130,7 @@ table.insert(
 
 _Please note_: the rings have an equal number of slices, which leads to the maze having a rather uneven structure. This is fixed in a different demo fully implementing an adaptive grid. I decided to preserve this project as well to illustrate how the code changes from the regular grid demos.
 
-## Polar Adaptive Grid
+## [Polar Adaptive Grid](https://repl.it/@borntofrappe/maze-polar-adaptive-grid)
 
 Building on top of the previous project, the demo tries to render a more realistic maze, one in which the cells are not excessively disparate in size. This is achieved by doubling the number of slices every other ring.
 
@@ -181,7 +181,7 @@ This takes care of the outer ring. However, going inwards, it is necessary to co
 end
 ```
 
-## Hex Grid
+## [Hex Grid](https://repl.it/@borntofrappe/maze-hex-grid)
 
 In terms of algorithm, the `recursiveBacktracker` function developed for the previous projects remains unchanged. The logic is to visit the grid until every cell has been visited, and to access the cells neighbor by neighbor. What changes, similarly to the polar grid, is the neighbors of the individual cells. In the regular grid there are up to four neighbors, in the polar adaptive grid up to five and here up to six. Consiedr the hexagon at the center of this basic illustration.
 
