@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 100 100" width="200" height="200">
+  <g fill="currentColor" >
+    <circle r="2" />
+    <circle r="2" cy="-34.6" />
+    <circle r="2" cx="-20" cy="-34.6" />
+    <circle r="2" cx="-40" cy="-34.6" />
+    <circle r="2" cx="-40" />
+    <g font-size="7" text-anchor="middle">
+      <text y="-5">(cx, cy)</text>
+      <text x="40" y="25">side</text>
+      <text x="-10" y="-40">a</text>
+      <text x="-30" y="-40">a</text>
+      <text x="-45" y="-20">b</text>
+    </g>
+  </g>
+  <g fill="none" stroke="currentColor">
+    <path stroke-width="2" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z" />
+    <g stroke-width="1" stroke-dasharray="3">
+      <path d="M -20 0 -20 -34.6 L -40 -34.6 -40 0" />
+      <path d="M 0 0 L 0 -34.6" />
+      <path d="M 0 0 L -40 0" />
+    </g>
+  </g>
+</svg>

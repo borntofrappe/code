@@ -79,20 +79,7 @@ Past this detail, the gates are drawn with four distinct instructions.
 
 Consider this arbitrary structure as a reference.
 
-<svg viewBox="-25 -60 100 100" width="200" height="200">
-  <g fill="currentColor" font-size="7">
-    <text x="-5" y="-10" text-anchor="middle">(x1, y1)</text>
-    <text y="10" text-anchor="middle">(x3, y3)</text>
-    <text x="35" y="-40" text-anchor="middle">(x2, y2)</text>
-    <text x="50" y="10" text-anchor="middle">(x4, y4)</text>
-    <text x="50" y="-20"><tspan>outer</tspan><tspan dx="-10" dy="7.5">radius</tspan></text>
-  </g>
-  <g fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M 0 0 h 50" />
-    <path d="M 0 0 l 35 -35" />
-    <path d="M 50 0 a 50 50 0 0 0 -100 0" pathLength="1" stroke-dasharray="0.25 0.75" />
-  </g>
-</svg>
+![Polar Cell](https://github.com/borntofrappe/code/tree/master/Maze%20Shapes/polar-cell.svg)
 
 The arc function describes the "up" and "down" variant, using the value described by the inner and outer radius.
 
@@ -185,44 +172,13 @@ end
 
 In terms of algorithm, the `recursiveBacktracker` function developed for the previous projects remains unchanged. The logic is to visit the grid until every cell has been visited, and to access the cells neighbor by neighbor. What changes, similarly to the polar grid, is the neighbors of the individual cells. In the regular grid there are up to four neighbors, in the polar adaptive grid up to five and here up to six. Consiedr the hexagon at the center of this basic illustration.
 
-<svg viewBox="-60 -60 120 120" width="200" height="200">
-  <g fill="none" stroke="currentColor" stroke-width="2">
-    <path transform="scale(0.5) translate(0 0)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(60 34.6)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(60 -34.6)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(-60 -34.6)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(-60 34.6)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(0 69.2)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(0 -69.2)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-  </g>
-</svg>
+![Hexagon Grid](https://github.com/borntofrappe/code/tree/master/Maze%20Shapes/hexagon-grid.svg)
 
 In this light, each cell is allowed to have six neighbors: north, north-east, south-east, south, south-west, north-west. The biggest challenge is to then ensure that the cells are attributed the correct neighbors. For instance, and considering the topmost cell in the illustration, this one has but three neighbors.
 
 In `Grid.lua`, the hexagons are laid out as in the following structure.
 
-<svg viewBox="-60 -60 120 120" width="200" height="200">
-  <g fill="none" stroke="currentColor" stroke-width="2">
-    <path transform="scale(0.5) translate(-60 0)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(-60 69.2)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(-60 -69.2)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(0 34.6)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(0 -34.6)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(60 0)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(60 69.2)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-    <path transform="scale(0.5) translate(60 -69.2)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
-  </g>
-  <g fill="currentColor" font-size="8" text-anchor="middle" dominant-baseline="middle">
-    <text x="-30" y="-34.6">(1,1)</text>
-    <text x="0" y="-17.3">(2,1)</text>
-    <text x="30" y="-34.6">(3,1)</text>
-    <text x="-30" y="0">(1,2)</text>
-    <text x="0" y="17.3">(2,2)</text>
-    <text x="30" y="0">(3,2)</text>
-    <text x="-30" y="34.6">(1,3)</text>
-    <text x="30" y="34.6">(3,3)</text>
-  </g>
-</svg>
+![Hexagon Grid — Rows and Columns](https://github.com/borntofrappe/code/tree/master/Maze%20Shapes/hexagon-rows-columns.svg)
 
 This structure changes the way cells access neighbors. Odd-numbered columns, for instance, have south-east neighbors in the same row (consider the cell `(1,1)`), while even-numbered columns need to consider the row directly below (consider the cell `(2,1)`).
 
@@ -230,30 +186,7 @@ The illustration should explain the different `if` statements used to populate t
 
 In `Cell.lua` a regular hexagon is computed starting from the length of the side described by the `CELL_SIDE` constant. The math involved can be explained by this illustration.
 
-<svg viewBox="-50 -50 100 100" width="200" height="200">
-  <g fill="currentColor" >
-    <circle r="2" />
-    <circle r="2" cy="-34.6" />
-    <circle r="2" cx="-20" cy="-34.6" />
-    <circle r="2" cx="-40" cy="-34.6" />
-    <circle r="2" cx="-40" />
-    <g font-size="7" text-anchor="middle">
-      <text y="-5">(cx, cy)</text>
-      <text x="40" y="25">side</text>
-      <text x="-10" y="-40">a</text>
-      <text x="-30" y="-40">a</text>
-      <text x="-45" y="-20">b</text>
-    </g>
-  </g>
-  <g fill="none" stroke="currentColor">
-    <path stroke-width="2" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z" />
-    <g stroke-width="1" stroke-dasharray="3">
-      <path d="M -20 0 -20 -34.6 L -40 -34.6 -40 0" />
-      <path d="M 0 0 L 0 -34.6" />
-      <path d="M 0 0 L -40 0" />
-    </g>
-  </g>
-</svg>
+![Hexagon Cell](https://github.com/borntofrappe/code/tree/master/Maze%20Shapes/hexagon-cell.svg)
 
 The coordinates of the vertices are computed from the value of the segments `a` and `b`, and knowing the following relationships with the side.
 

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -60 120 120" width="200" height="200">
+  <g fill="none" stroke="currentColor" stroke-width="2">
+    <path transform="scale(0.5) translate(0 0)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
+    <path transform="scale(0.5) translate(60 34.6)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
+    <path transform="scale(0.5) translate(60 -34.6)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
+    <path transform="scale(0.5) translate(-60 -34.6)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
+    <path transform="scale(0.5) translate(-60 34.6)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
+    <path transform="scale(0.5) translate(0 69.2)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
+    <path transform="scale(0.5) translate(0 -69.2)" d="M -20 -34.6 L 20 -34.6 40 0 20 34.6 -20 34.6 -40 0z"/>
+  </g>
+</svg>
