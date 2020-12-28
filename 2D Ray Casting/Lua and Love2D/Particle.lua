@@ -3,7 +3,7 @@ Particle.__index = Particle
 
 function Particle:create(x, y)
   local rays = {}
-  for i = 0, 360 do
+  for i = 0, 360, 5 do
     local angle = math.rad(i)
     table.insert(rays, Ray:create(x, y, angle))
   end
@@ -26,16 +26,30 @@ function Particle:render()
   -- end
 end
 
-function Particle:cast(boundary)
-  local points = {}
+function Particle:cast(boundaries)
+  local pts = {}
   for i, ray in ipairs(self.rays) do
-    local point = ray:cast(boundary)
-    if point then
-      table.insert(points, point)
+    local closestPoint = nil
+    local closestDistance = nil
+    for j, boundary in ipairs(boundaries) do
+      local pt = ray:cast(boundary)
+      if pt then
+        local distance = ((pt.x - self.x) ^ 2 + (pt.y - self.y) ^ 2) ^ 0.5
+        if not closestDistance or distance < closestDistance then
+          closestDistance = distance
+          closestPoint = {
+            ["x"] = pt.x,
+            ["y"] = pt.y
+          }
+        end
+      end
+    end
+    if closestPoint then
+      table.insert(pts, closestPoint)
     end
   end
 
-  return points
+  return pts
 end
 
 function Particle:move(x, y)
