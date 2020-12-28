@@ -1,14 +1,15 @@
 Ray = {}
 Ray.__index = Ray
 
-function Ray:create(x, y)
+function Ray:create(x, y, angle)
+  -- create vector from angle
+  local direction = {}
+  direction.x = math.cos(angle)
+  direction.y = math.sin(angle)
   this = {
     ["x"] = x,
     ["y"] = y,
-    ["direction"] = {
-      ["x"] = 1,
-      ["y"] = 0
-    }
+    ["direction"] = direction
   }
 
   setmetatable(this, self)
