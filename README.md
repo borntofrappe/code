@@ -41,3 +41,9 @@ Implement a series of algorithms to design twisty little passageways.
 Implement the recursive backtracker algorithm with mazes of different shape.
 
 **Live demo(s)**: [Grid Masking](https://repl.it/@borntofrappe/maze-grid-masking), [Polar Grid](https://repl.it/@borntofrappe/maze-polar-grid), [Polar Adaptive Grid](https://repl.it/@borntofrappe/maze-polar-adaptive-grid), [Hex Grid](https://repl.it/@borntofrappe/maze-hex-grid), [Triangle Grid](https://repl.it/@borntofrappe/maze-triangle-grid)
+
+## 2D Ray Casting
+
+Project a series of lines against the surrounding environment.
+
+<!-- **Live demo(s)**: [Lua and Love2D](), [JavaScript and Canvas API]() -->
