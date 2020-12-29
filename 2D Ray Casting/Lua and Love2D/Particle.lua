@@ -19,43 +19,42 @@ function Particle:create(x, y)
 end
 
 function Particle:render()
-  love.graphics.setColor(1, 1, 1, 0.5)
-  love.graphics.circle("fill", self.x, self.y, 8)
+  love.graphics.setColor(1, 1, 1, OPACITY_PARTICLE)
+  love.graphics.circle("fill", self.x, self.y, RADIUS_PARTICLE)
+  -- -- render the lines describing the rays from the particle (the points casted against the boundaries draw above these lines)
   -- for i, ray in ipairs(self.rays) do
   --   ray:render()
   -- end
 end
 
 function Particle:cast(boundaries)
-  local pts = {}
+  local points = {}
   for i, ray in ipairs(self.rays) do
     local closestPoint = nil
     local closestDistance = nil
     for j, boundary in ipairs(boundaries) do
-      local pt = ray:cast(boundary)
-      if pt then
-        local distance = ((pt.x - self.x) ^ 2 + (pt.y - self.y) ^ 2) ^ 0.5
+      local point = ray:cast(boundary)
+      if point then
+        local distance = ((point.x - self.x) ^ 2 + (point.y - self.y) ^ 2) ^ 0.5
         if not closestDistance or distance < closestDistance then
           closestDistance = distance
-          closestPoint = {
-            ["x"] = pt.x,
-            ["y"] = pt.y
-          }
+          closestPoint = point
         end
       end
     end
     if closestPoint then
-      table.insert(pts, closestPoint)
+      table.insert(points, closestPoint)
     end
   end
 
-  return pts
+  return points
 end
 
 function Particle:move(x, y)
   self.x = x
   self.y = y
 
+  -- update the rays position to match the new point of reference
   for i, ray in ipairs(self.rays) do
     ray.x = x
     ray.y = y

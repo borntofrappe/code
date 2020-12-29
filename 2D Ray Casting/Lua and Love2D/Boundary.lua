@@ -14,7 +14,7 @@ function Boundary:create(x1, y1, x2, y2)
 end
 
 function Boundary:render()
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.setLineWidth(5)
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.setLineWidth(LINE_WIDTH_BOUNDARY)
   love.graphics.line(self.x1, self.y1, self.x2, self.y2)
 end
