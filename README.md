@@ -46,4 +46,4 @@ Implement the recursive backtracker algorithm with mazes of different shape.
 
 Project a series of lines against the surrounding environment.
 
-<!-- **Live demo(s)**: [Lua and Love2D](), [JavaScript and Canvas API]() -->
+<!-- **Live demo(s)**: [Lua and Love2D](), [JavaScript and Canvas]() -->

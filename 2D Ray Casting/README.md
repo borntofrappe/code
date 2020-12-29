@@ -6,7 +6,7 @@ The topic is _ray casting_, whereby lines are projected from a point of referenc
 
 - Lua and Love2D
 
-- JavaScript and the Canvas API
+- JavaScript and Canvas
 
 ## Math
 
