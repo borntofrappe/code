@@ -3,7 +3,7 @@ Particle.__index = Particle
 
 function Particle:create(x, y)
   local rays = {}
-  for i = 0, 360, 5 do
+  for i = 1, 360 do
     local angle = math.rad(i)
     table.insert(rays, Ray:create(x, y, angle))
   end
@@ -19,8 +19,8 @@ function Particle:create(x, y)
 end
 
 function Particle:render()
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.circle("fill", self.x, self.y, 6)
+  love.graphics.setColor(1, 1, 1, 0.5)
+  love.graphics.circle("fill", self.x, self.y, 8)
   -- for i, ray in ipairs(self.rays) do
   --   ray:render()
   -- end

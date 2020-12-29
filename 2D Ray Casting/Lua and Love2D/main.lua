@@ -50,7 +50,8 @@ function love.draw()
   particle:render()
 
   if #points > 0 then
-    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setColor(1, 1, 1, 0.5)
+    love.graphics.setLineWidth(3)
     for i, point in ipairs(points) do
       love.graphics.line(particle.x, particle.y, point.x, point.y)
     end

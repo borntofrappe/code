@@ -19,10 +19,7 @@ end
 function Ray:render()
   love.graphics.setColor(1, 1, 1)
   love.graphics.setLineWidth(1)
-  love.graphics.push()
-  love.graphics.translate(self.x, self.y)
-  love.graphics.line(0, 0, self.direction.x * 10, self.direction.y * 10)
-  love.graphics.pop()
+  love.graphics.line(self.x, self.y, self.x + self.direction.x * 10, self.y + self.direction.y * 10)
 end
 
 function Ray:lookAt(x, y)
@@ -51,7 +48,7 @@ function Ray:cast(boundary)
     return nil
   else
     local t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denominator
-    local u = ((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3) * -1) / denominator
+    local u = ((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / denominator * -1
     if t > 0 and t < 1 and u > 0 then
       return {
         ["x"] = x1 + t * (x2 - x1),
