@@ -4,9 +4,11 @@ The goal of this project is to recreate the demo introduced in [this challenge](
 
 The topic is _ray casting_, whereby lines are projected from a point of reference against the surrounding environment. The lecturer implements a demo in the context of Processing, using the JavaScript language, but here I try to use two different stacks:
 
-- Lua and Love2D
+- [Lua and Love2D](https://repl.it/@borntofrappe/2D-Ray-Casting)
 
-- JavaScript and Canvas
+- [JavaScript and Canvas](https://codepen.io/borntofrappe/pen/rNMpPNj)
+
+The difference between the two is that I chose to update the visualization with the canvas API only when dragging the particle, while the Love2D demo is modified regardless of the mouse being pressed.
 
 ## Math
 
