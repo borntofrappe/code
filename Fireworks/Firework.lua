@@ -1,3 +1,5 @@
+require "Particle"
+
 Firework = {}
 Firework.__index = Firework
 
@@ -50,6 +52,8 @@ function Firework:update(dt)
       self.particle.acceleration.y = 0
 
       for i = 1, PARTICLES do
+        local radius = RADIUS_PARTICLE
+
         local position = {
           ["x"] = self.particle.position.x,
           ["y"] = self.particle.position.y
@@ -62,28 +66,32 @@ function Firework:update(dt)
           vx = 16 * math.sin(t) ^ 3
           vy = (13 * math.cos(t) - 5 * math.cos(2 * t) - 2 * math.cos(3 * t) - math.cos(4 * t))
 
-          vx = vx * 2 + love.math.random(OFFSET_HEART_SHAPE_MAX)
-          vy = vy * 2 * -1 + love.math.random(OFFSET_HEART_SHAPE_MAX)
+          vx = vx * MULTIPLIER_HEART_SHAPE + love.math.random(OFFSET_HEART_SHAPE_MAX)
+          vy = vy * MULTIPLIER_HEART_SHAPE * -1 + love.math.random(OFFSET_HEART_SHAPE_MAX)
         else
-          vx = love.math.random(VELOCITY_PARTICLE * -1, VELOCITY_PARTICLE)
-          vy = love.math.random(VELOCITY_PARTICLE * -1, VELOCITY_PARTICLE)
+          local angle = math.rad(love.math.random(360))
+          local distance = love.math.random(VELOCITY_PARTICLE)
+          vx = math.cos(angle) * distance
+          vy = math.sin(angle) * distance
         end
 
         local velocity = {
           ["x"] = vx,
           ["y"] = vy
         }
+
         local acceleration = {
           ["x"] = 0,
           ["y"] = GRAVITY_PARTICLE
         }
+
         local color = {
           ["r"] = self.particle.color.r,
           ["g"] = self.particle.color.g,
           ["b"] = self.particle.color.b
         }
 
-        table.insert(self.particles, Particle:create(RADIUS_PARTICLE, position, velocity, acceleration, color))
+        table.insert(self.particles, Particle:create(radius, position, velocity, acceleration, color))
       end
     end
   else
