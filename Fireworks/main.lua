@@ -1,11 +1,16 @@
 require "Particle"
+require "Firework"
 
 WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 400
-RADIUS_PARTICLE = 3
-PARTICLES = 8
+RADIUS_FIREWORK = 2
+RADIUS_PARTICLE = 1.5
+FIREWORKS = 5
+PARTICLES = 100
 VELOCITY_MIN = 380
 VELOCITY_MAX = 580
+VELOCITY_PARTICLE = 80
+GRAVITY_PARTICLE = 200
 GRAVITY = 450
 
 function love.load()
@@ -13,9 +18,9 @@ function love.load()
   love.window.setTitle("Fireworks")
   love.graphics.setBackgroundColor(0.07, 0.07, 0.07)
 
-  particles = {}
-  for i = 1, PARTICLES do
-    table.insert(particles, Particle:create())
+  fireworks = {}
+  for i = 1, FIREWORKS do
+    table.insert(fireworks, Firework:create())
   end
 end
 
@@ -26,18 +31,20 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-  for i = #particles, 1, -1 do
-    local particle = particles[i]
-    particle:update(dt)
-    if particle.position.y - RADIUS_PARTICLE > WINDOW_HEIGHT then
-      table.remove(particles, i)
-      table.insert(particles, Particle:create())
+  for i = #fireworks, 1, -1 do
+    local firework = fireworks[i]
+    firework:update(dt)
+    if firework.hasExpired then
+      table.remove(fireworks, i)
+      table.insert(fireworks, Firework:create())
     end
   end
 end
 
 function love.draw()
-  for i, particle in ipairs(particles) do
-    particle:render()
+  for i, firework in ipairs(fireworks) do
+    firework:render()
   end
+
+  love.graphics.print(#fireworks[1].particles, 8, 8)
 end

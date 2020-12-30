@@ -53,7 +53,7 @@ local acceleration = {
 }
 ```
 
-_Please note_: the code explained in the snippets is updated so that the `Particle` construct accepts the three vectors, and otherwise uses the mentioned values as a default, as a fallback. This ensures that `Particle:create()` introduces a particle moving upwards under the force of gravity.
+_Please note_: the code explained in the snippets is updated so that the `Particle` construct accepts the three vectors, and otherwise uses the mentioned values as a default, as a fallback. This ensures that `Particle:create(RADIUS_FIREWORK)` introduces a particle moving upwards under the force of gravity.
 
 ## Garbage Collection
 
