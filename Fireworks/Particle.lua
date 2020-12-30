@@ -14,11 +14,6 @@ function Particle:create(r, position, velocity, acceleration, color)
   return this
 end
 
-function Particle:applyForce(force)
-  self.acceleration.x = self.acceleration.x + force.x
-  self.acceleration.y = self.acceleration.y + force.y
-end
-
 function Particle:update(dt)
   self.position.x = self.position.x + self.velocity.x * dt
   self.position.y = self.position.y + self.velocity.y * dt

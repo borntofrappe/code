@@ -4,7 +4,11 @@ Firework = {}
 Firework.__index = Firework
 
 function Firework:create()
+  --[[ firework body
+    initialize a particle moving upwards from the bottom of the window
+  ]]
   local r = RADIUS_FIREWORK
+
   local color = {
     ["r"] = love.math.random(COLOR_MIN, COLOR_MAX) / COLOR_MAX,
     ["g"] = love.math.random(COLOR_MIN, COLOR_MAX) / COLOR_MAX,
@@ -28,7 +32,14 @@ function Firework:create()
 
   local particle = Particle:create(r, position, velocity, acceleration, color)
 
+  -- table storing the particles radiating from the explosion
   local particles = {}
+
+  --[[ controlling booleans
+  - hasExploded, to show/update the particles
+  - hasExpired, to remove the firework as the particles disappear
+  - isHeartShaped, to change the vector describing the velocity
+  ]]
   local hasExploded = false
   local hasExpired = false
   local isHeartShaped = love.math.random(ODDS_HEART_SHAPE) == 1
@@ -36,6 +47,8 @@ function Firework:create()
   this = {
     ["particle"] = particle,
     ["particles"] = particles,
+    ["hasExploded"] = hasExploded,
+    ["hasExpired"] = hasExpired,
     ["isHeartShaped"] = isHeartShaped
   }
 
@@ -46,13 +59,18 @@ end
 function Firework:update(dt)
   if not self.hasExploded then
     self.particle:update(dt)
+
+    -- explosion when the body of the firework reaches the tallest point
     if self.particle.velocity.y > 0 then
       self.hasExploded = true
       self.particle.velocity.y = 0
       self.particle.acceleration.y = 0
 
       for i = 1, PARTICLES do
-        local radius = RADIUS_PARTICLE
+        --[[ particles
+          initialize a particle from the position of the exploding entity
+        ]]
+        local r = RADIUS_PARTICLE
 
         local position = {
           ["x"] = self.particle.position.x,
@@ -70,9 +88,9 @@ function Firework:update(dt)
           vy = vy * MULTIPLIER_HEART_SHAPE * -1 + love.math.random(OFFSET_HEART_SHAPE_MAX)
         else
           local angle = math.rad(love.math.random(360))
-          local distance = love.math.random(VELOCITY_PARTICLE)
-          vx = math.cos(angle) * distance
-          vy = math.sin(angle) * distance
+          local radius = love.math.random(VELOCITY_PARTICLE)
+          vx = math.cos(angle) * radius
+          vy = math.sin(angle) * radius
         end
 
         local velocity = {
@@ -91,10 +109,11 @@ function Firework:update(dt)
           ["b"] = self.particle.color.b
         }
 
-        table.insert(self.particles, Particle:create(radius, position, velocity, acceleration, color))
+        table.insert(self.particles, Particle:create(r, position, velocity, acceleration, color))
       end
     end
   else
+    -- reduce the radius of the particles and remove the items from the table as they are removed from sight (0 radius)
     for i = #self.particles, 1, -1 do
       local particle = self.particles[i]
       particle:update(dt)

@@ -52,4 +52,4 @@ Project a series of lines against the surrounding environment.
 
 Simulate the motion of fireworks and particles.
 
-<!-- **Live demo(s)**: [Physics](), [Particle System](), [Heart Shape]() -->
+**Live demo(s)**: [Fireworks](https://repl.it/@borntofrappe/Fireworks)

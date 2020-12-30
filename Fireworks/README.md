@@ -1,6 +1,6 @@
-# Fireworks
+# [Fireworks](https://repl.it/@borntofrappe/Fireworks)
 
-The most immediate goal of this project is replicating the visual introduced in [this demo](https://thecodingtrain.com/CodingChallenges/027-fireworks.html) from the [coding train](https://thecodingtrain.com/) website.
+With this project I set out to simulate fireworks following the example provided in [this coding challenge](https://thecodingtrain.com/CodingChallenges/027-fireworks.html) from [the coding train](https://thecodingtrain.com/) website. The approach is slightly different, the demo is implemented in Lua and Love2D instead of Processing or again JavaScript, but the rules, the physics governing the motion of the particles is the same.
 
 ## Physics
 
@@ -30,7 +30,7 @@ function love.update(dt)
 end
 ```
 
-`acceleration` is used to modify the velocity itself. By increasing/decreasing the velocity the particle speeds up or slows down and eventually reverses itself.
+`acceleration` is used to modify the velocity itself. By increasing/decreasing the velocity the particle speeds up or slows down and eventually reverses its movement.
 
 ```lua
 function love.update(dt)
@@ -39,7 +39,7 @@ function love.update(dt)
 end
 ```
 
-In the particular demo the particles are initialized in the bottom part of the screen, with a negative velocity so that the particles move upwards. The acceleration is introduced in the form of gravity is positive so that the particles slow down before falling down. To modify the acceleration, the `applyForce` function directly modifies the appropriate `x` and `y` components.
+In the particular demo the particles are initialized in the bottom part of the screen, with a negative velocity so that the particles move upwards. The acceleration is introduced in the form of gravity is positive so that the particles slow down before falling down.
 
 ```lua
 local velocity = {
@@ -53,19 +53,76 @@ local acceleration = {
 }
 ```
 
-_Please note_: the code explained in the snippets is updated so that the `Particle` construct accepts the three vectors, and otherwise uses the mentioned values as a default, as a fallback. This ensures that `Particle:create(RADIUS_FIREWORK)` introduces a particle moving upwards under the force of gravity.
+_Please note_: the code is updated so that the `Particle` construct accepts the three vectors in the initialization function. Following the modification, the movement is implemented as described in the snippets above.
 
-## Garbage Collection
+## Heart Shape
 
-The particles are removed when they exceed the bottom of the window.
+By default, the particles explode in a circle.
 
 ```lua
-for i = #particles, 1, -1 do
-  local particle = particles[i]
-  if particle.y - RADIUS_PARTICLE > WINDOW_HEIGHT then
-    table.remove(particles, i)
-  end
+for i = 1, PARTICLES do
+  local angle = math.rad(love.math.random(360))
+  local radius = love.math.random(VELOCITY_PARTICLE)
+  vx = math.cos(angle) * radius
+  vy = math.sin(angle) * radius
 end
 ```
 
-This works as a first solution however. Eventually, the idea is to remove the firework when it reaches the topmost point, and the accompanying particles disappear.
+With an arbitrary odd, the default shape is however disregarded in favor of a heart.
+
+```lua
+if self.isHeartShaped then
+  -- heart explosion
+else
+  -- default explosion
+end
+```
+
+This shape is computed consiering the logic introduced [in this coding challenge](https://thecodingtrain.com/CodingChallenges/134.1-heart-curve.html) and the formula [from this Wolfram MathWorld](http://mathworld.wolfram.com/HeartCurve.html).
+
+The trigonometric functions are used on a value in the `[1, math.pi * 2]` range.
+
+```lua
+for i = 1, PARTICLES do
+  local t = i / PARTICLES * math.pi * 2
+  vx = 16 * math.sin(t) ^ 3
+  vy = (13 * math.cos(t) - 5 * math.cos(2 * t) - 2 * math.cos(3 * t) - math.cos(4 * t))
+end
+```
+
+The components of the vector are then multiplied to have the particles scatter in a wider area.
+
+```lua
+vx = vx * MULTIPLIER_HEART_SHAPE
+vy = vy * MULTIPLIER_HEART_SHAPE * -1
+```
+
+## constants
+
+In a first version, the constants describing the velocity, gravity and otherwise appearance of the simulation were initialized at the top of `main.lua` with arbitrary values.
+
+```lua
+VELOCITY_MIN = 380
+VELOCITY_MAX = 540
+```
+
+This approach worked with the size chosen for the window.
+
+```lua
+WINDOW_WIDTH = 400
+WINDOW_HEIGHT = 400
+```
+
+As I updated the demo to consider the entirety of the screen, and therefore a variable measure for both dimensions, I moved the constants in `love.load()`, so that the simulation changes according to the available widht and height.
+
+```lua
+VELOCITY_MIN = WINDOW_HEIGHT * 0.95
+VELOCITY_MAX = WINDOW_HEIGHT * 1.45
+```
+
+The width and height are retrieved from the window, after Love2D is instructed to cover the entirety of the available space.
+
+```lua
+love.window.setMode(0, 0)
+WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
+```
