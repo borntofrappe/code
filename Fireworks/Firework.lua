@@ -29,10 +29,12 @@ function Firework:create()
   local particles = {}
   local hasExploded = false
   local hasExpired = false
+  local isHeartShaped = love.math.random(ODDS_HEART_SHAPE) == 1
 
   this = {
     ["particle"] = particle,
-    ["particles"] = particles
+    ["particles"] = particles,
+    ["isHeartShaped"] = isHeartShaped
   }
 
   setmetatable(this, self)
@@ -52,9 +54,24 @@ function Firework:update(dt)
           ["x"] = self.particle.position.x,
           ["y"] = self.particle.position.y
         }
+
+        local vx, vy
+
+        if self.isHeartShaped then
+          local t = i / PARTICLES * math.pi * 2
+          vx = 16 * math.sin(t) ^ 3
+          vy = (13 * math.cos(t) - 5 * math.cos(2 * t) - 2 * math.cos(3 * t) - math.cos(4 * t))
+
+          vx = vx * 2 + love.math.random(OFFSET_HEART_SHAPE_MAX)
+          vy = vy * 2 * -1 + love.math.random(OFFSET_HEART_SHAPE_MAX)
+        else
+          vx = love.math.random(VELOCITY_PARTICLE * -1, VELOCITY_PARTICLE)
+          vy = love.math.random(VELOCITY_PARTICLE * -1, VELOCITY_PARTICLE)
+        end
+
         local velocity = {
-          ["x"] = love.math.random(VELOCITY_PARTICLE * -1, VELOCITY_PARTICLE),
-          ["y"] = love.math.random(VELOCITY_PARTICLE * -1, VELOCITY_PARTICLE)
+          ["x"] = vx,
+          ["y"] = vy
         }
         local acceleration = {
           ["x"] = 0,
