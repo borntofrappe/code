@@ -3,6 +3,11 @@ Firework.__index = Firework
 
 function Firework:create()
   local r = RADIUS_FIREWORK
+  local color = {
+    ["r"] = love.math.random(COLOR_MIN, COLOR_MAX) / COLOR_MAX,
+    ["g"] = love.math.random(COLOR_MIN, COLOR_MAX) / COLOR_MAX,
+    ["b"] = love.math.random(COLOR_MIN, COLOR_MAX) / COLOR_MAX
+  }
 
   local position = {
     ["x"] = love.math.random(WINDOW_WIDTH),
@@ -19,7 +24,7 @@ function Firework:create()
     ["y"] = GRAVITY
   }
 
-  local particle = Particle:create(r, position, velocity, acceleration)
+  local particle = Particle:create(r, position, velocity, acceleration, color)
 
   local particles = {}
   local hasExploded = false
@@ -27,8 +32,7 @@ function Firework:create()
 
   this = {
     ["particle"] = particle,
-    ["particles"] = particles,
-    ["timer"] = 0
+    ["particles"] = particles
   }
 
   setmetatable(this, self)
@@ -56,8 +60,13 @@ function Firework:update(dt)
           ["x"] = 0,
           ["y"] = GRAVITY_PARTICLE
         }
+        local color = {
+          ["r"] = self.particle.color.r,
+          ["g"] = self.particle.color.g,
+          ["b"] = self.particle.color.b
+        }
 
-        table.insert(self.particles, Particle:create(RADIUS_PARTICLE, position, velocity, acceleration))
+        table.insert(self.particles, Particle:create(RADIUS_PARTICLE, position, velocity, acceleration, color))
       end
     end
   else

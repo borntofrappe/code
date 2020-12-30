@@ -1,12 +1,13 @@
 Particle = {}
 Particle.__index = Particle
 
-function Particle:create(r, position, velocity, acceleration)
+function Particle:create(r, position, velocity, acceleration, color)
   this = {
     ["r"] = r,
     ["position"] = position,
     ["velocity"] = velocity,
-    ["acceleration"] = acceleration
+    ["acceleration"] = acceleration,
+    ["color"] = color
   }
 
   setmetatable(this, self)
@@ -27,6 +28,6 @@ function Particle:update(dt)
 end
 
 function Particle:render()
-  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.setColor(self.color.r, self.color.g, self.color.b, 1)
   love.graphics.circle("fill", self.position.x, self.position.y, self.r)
 end
