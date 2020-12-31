@@ -3,7 +3,7 @@ require "Firework"
 COLOR_MIN = 50
 COLOR_MAX = 255
 ODDS_FIREWORK = 40
-ODDS_HEART_SHAPE = 8
+ODDS_HEART_SHAPE = 5
 
 function love.load()
   love.window.setTitle("Fireworks")
@@ -27,6 +27,9 @@ function love.load()
 
   PARTICLES = math.floor(math.min(WINDOW_WIDTH, WINDOW_HEIGHT) * 0.5)
   RADIUS_PARTICLE = math.min(WINDOW_WIDTH, WINDOW_HEIGHT) * 0.0025
+
+  THRESHOLD_FIREWORK = VELOCITY_MIN * 0.15
+  POINTS_TRAIL = math.floor(WINDOW_HEIGHT * 0.04)
 
   fireworks = {}
 end

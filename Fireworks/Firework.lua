@@ -35,6 +35,9 @@ function Firework:create()
   -- table storing the particles radiating from the explosion
   local particles = {}
 
+  -- table storing an arbitrary number of positions to draw a trail
+  local trail = {}
+
   --[[ controlling booleans
   - hasExploded, to show/update the particles
   - hasExpired, to remove the firework as the particles disappear
@@ -47,6 +50,7 @@ function Firework:create()
   this = {
     ["particle"] = particle,
     ["particles"] = particles,
+    ["trail"] = trail,
     ["hasExploded"] = hasExploded,
     ["hasExpired"] = hasExpired,
     ["isHeartShaped"] = isHeartShaped
@@ -60,16 +64,29 @@ function Firework:update(dt)
   if not self.hasExploded then
     self.particle:update(dt)
 
-    -- explosion when the body of the firework reaches the tallest point
-    if self.particle.velocity.y > 0 then
+    local position = {
+      ["x"] = self.particle.position.x,
+      ["y"] = self.particle.position.y
+    }
+
+    table.insert(self.trail, 1, position)
+    if #self.trail > POINTS_TRAIL then
+      table.remove(self.trail)
+    end
+
+    -- reduce the radius of the particle as it reaches the tallest point
+    if self.particle.velocity.y >= 0 then
+      self.particle.r = math.max(0, self.particle.r - dt)
+    end
+    -- explode when the body of the firework crosses the arbitrary threshold
+    if self.particle.velocity.y >= THRESHOLD_FIREWORK then
       self.hasExploded = true
       self.particle.velocity.y = 0
       self.particle.acceleration.y = 0
-
       for i = 1, PARTICLES do
         --[[ particles
-          initialize a particle from the position of the exploding entity
-        ]]
+            initialize a particle from the position of the exploding entity
+          ]]
         local r = RADIUS_PARTICLE
 
         local position = {
@@ -132,6 +149,12 @@ end
 function Firework:render()
   if not self.hasExploded then
     self.particle:render()
+    for i, position in ipairs(self.trail) do
+      local opacity = (#self.trail - i) / #self.trail / 2
+      local radius = (#self.trail - i) / #self.trail * self.particle.r / 2
+      love.graphics.setColor(self.particle.color.r, self.particle.color.g, self.particle.color.b, opacity)
+      love.graphics.circle("fill", position.x, position.y, radius)
+    end
   else
     if not self.hasExpired then
       for i, particle in ipairs(self.particles) do

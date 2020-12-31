@@ -126,3 +126,35 @@ The width and height are retrieved from the window, after Love2D is instructed t
 love.window.setMode(0, 0)
 WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
 ```
+
+## Trail
+
+I decided to update the demo to have a series of circles describe the trail of the firework, or at least the body of the firework. The idea is to include the vector of the position in a `trail` table, and loop through the table to draw circle with decreasing radius and opacity.
+
+```lua
+for i, position in ipairs(self.trail) do
+  local opacity = (#self.trail - i) / #self.trail / 2
+  local radius = (#self.trail - i) / #self.trail * self.particle.r / 2
+  love.graphics.setColor(self.particle.color.r, self.particle.color.g, self.particle.color.b, opacity)
+  love.graphics.circle("fill", position.x, position.y, radius)
+end
+```
+
+When building the table, the position of the main particle is added as the first item of the table.
+
+```lua
+local position = {
+  ["x"] = self.particle.position.x,
+  ["y"] = self.particle.position.y
+}
+
+table.insert(self.trail, 1, position)
+```
+
+A threshold is then used to ensure a limited number of points.
+
+```lua
+if #self.trail > POINTS_TRAIL then
+  table.remove(self.trail)
+end
+```
