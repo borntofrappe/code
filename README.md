@@ -53,3 +53,9 @@ Project a series of lines against the surrounding environment.
 Simulate the motion of fireworks and particles.
 
 **Live demo(s)**: [Fireworks](https://repl.it/@borntofrappe/Fireworks)
+
+## Attraction and Repulsion
+
+Implement the necessary physics to have particles gravitate toward/away from a given object.
+
+<!-- **Live demo(s)**: [Attraction Pattern](), [Attraction and Repulsion]() -->
