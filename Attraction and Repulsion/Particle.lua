@@ -7,6 +7,7 @@ function Particle:create(r, position, velocity, acceleration, color)
     ["position"] = position,
     ["velocity"] = velocity,
     ["acceleration"] = acceleration,
+    ["history"] = {position.x, position.y},
     ["color"] = color or
       {
         ["r"] = 1,
@@ -26,13 +27,22 @@ function Particle:update(dt)
   self.velocity.x = self.velocity.x + self.acceleration.x * dt
   self.velocity.y = self.velocity.y + self.acceleration.y * dt
 
-  -- self.acceleration.x = 0
-  -- self.acceleration.y = 0
+  table.insert(self.history, self.position.x)
+  table.insert(self.history, self.position.y)
+
+  if #self.history > HISTORY_MAX then
+    table.remove(self.history, 1)
+    table.remove(self.history, 1)
+  end
 end
 
 function Particle:render()
   love.graphics.setColor(self.color.r, self.color.g, self.color.b, 1)
   love.graphics.circle("fill", self.position.x, self.position.y, self.r)
+
+  love.graphics.setColor(self.color.r, self.color.g, self.color.b, OPACITY_TRAIL)
+  love.graphics.setLineWidth(LINE_WIDTH_PARTICLE)
+  love.graphics.line(self.history)
 end
 
 function Particle:attract(target)
@@ -43,7 +53,7 @@ function Particle:attract(target)
   local magnitude = (force.x ^ 2 + force.y ^ 2) ^ 0.5
 
   local distanceSquared = magnitude ^ 2
-  distanceSquared = math.min(500, math.max(50, distanceSquared))
+  distanceSquared = math.min(DISTANCE_MAX, math.max(DISTANCE_MIN, distanceSquared))
   local g = GRAVITATIONAL_CONSTANT
 
   local strength = g / distanceSquared
