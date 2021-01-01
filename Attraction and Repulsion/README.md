@@ -1,3 +1,7 @@
+TODO:
+
+- update title of the project in the gravitational attraction folder
+
 # Attraction and Repulsion
 
 In this folder you find to demos exploring the topic of gravitational forces, be it attraction, attraction and repulsion. The project stems from the physics introduced in [this coding challenge](https://thecodingtrain.com/CodingChallenges/056-attraction-repulsion.html) from [the coding train](https://thecodingtrain.com/) website, and heavily relies on the [accompanying code in the p5.js editor](https://editor.p5js.org/codingtrain/sketches/6WL2O4vq0).
@@ -80,3 +84,9 @@ magnitude = (vector.x ^ 2 + vector.y ^ 2) ^ 0.5
 ```
 
 In the context of a 2D vector, the measure is therefore the same as the distance, `vector.x` and `vector.y` being the components of the distance in the `x` and `y` dimensions.
+
+## Attraction and Repulsion
+
+The folder creates a more interactive demo, closer to the project finalized in the cited video. The idea is to have multiple particles and multiple attractors. Moreover, the particles spawn continuously, while the attractors spawn following a click and the position of the mouse cursor.
+
+The forces involved are roughly the same, with a few modifications to the `Particle:update()` and `Particle:attract()` function.
