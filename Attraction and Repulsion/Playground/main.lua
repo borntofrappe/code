@@ -21,7 +21,7 @@ VELOCITY_MAGNITUDE_LIMIT = 5
 UPDATE_SPEED = 40
 
 function love.load()
-  love.window.setTitle("Attraction and Repulsion")
+  love.window.setTitle("Playground")
   love.graphics.setBackgroundColor(0.07, 0.07, 0.07)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
 

@@ -58,4 +58,4 @@ Simulate the motion of fireworks and particles.
 
 Implement the necessary physics to have particles gravitate toward/away from a given object.
 
-<!-- **Live demo(s)**: [Attraction Pattern](), [Attraction and Repulsion]() -->
+**Live demo(s)**: [Gravitational Attraction](https://repl.it/@borntofrappe/Gravitational-Attraction), [Playground](https://repl.it/@borntofrappe/Gravitational-Playground)

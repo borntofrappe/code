@@ -28,7 +28,7 @@ TRAIL_MAX = 1000
 UPDATE_SPEED = 30
 
 function love.load()
-  love.window.setTitle("Gravitational Attraction Pattern")
+  love.window.setTitle("Gravitational Attraction")
   love.graphics.setBackgroundColor(0.07, 0.07, 0.07)
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
 

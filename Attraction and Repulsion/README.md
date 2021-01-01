@@ -1,7 +1,3 @@
-TODO:
-
-- update title of the project in the gravitational attraction folder
-
 # Attraction and Repulsion
 
 In this folder you find to demos exploring the topic of gravitational forces, be it attraction, attraction and repulsion. The project stems from the physics introduced in [this coding challenge](https://thecodingtrain.com/CodingChallenges/056-attraction-repulsion.html) from [the coding train](https://thecodingtrain.com/) website, and heavily relies on the [accompanying code in the p5.js editor](https://editor.p5js.org/codingtrain/sketches/6WL2O4vq0).
@@ -12,7 +8,7 @@ In the future, I hope to revisit the folder with more knowledge regarding the un
 
 The concept is explaine in the [`Fireworks` demo](https://github.com/borntofrappe/code/blob/master/Fireworks/README.md#physics), and relates to the physics making it possible for a particle to move with uniform acceleration. The idea is to use vectors for the position, velocity, and acceleration, have the position influenced by the velocity, and the velocity by the acceleration. With a constant acceleration, the velocity increases/decreases to have the particle move faster/slower and eventually reverse its movement.
 
-## Gravitational Attraction
+## [Gravitational Attraction](https://repl.it/@borntofrappe/Gravitational-Attraction)
 
 The folder introduces gravitational forces in an environment populated with one attractor, in the center of the window, and many particles, scattered around it.
 
@@ -85,8 +81,39 @@ magnitude = (vector.x ^ 2 + vector.y ^ 2) ^ 0.5
 
 In the context of a 2D vector, the measure is therefore the same as the distance, `vector.x` and `vector.y` being the components of the distance in the `x` and `y` dimensions.
 
-## Attraction and Repulsion
+## [Playground](https://repl.it/@borntofrappe/Gravitational-Playground)
 
-The folder creates a more interactive demo, closer to the project finalized in the cited video. The idea is to have multiple particles and multiple attractors. Moreover, the particles spawn continuously, while the attractors spawn following a click and the position of the mouse cursor.
+The folder creates a more interactive demo, closer to the project finalized in the cited video. The idea is to have multiple particles and multiple attractors. The particles spawn continuously, while the attractors spawn following a click and the position of the mouse cursor.
 
 The forces involved are roughly the same, with a few modifications to the `Particle:update()` and `Particle:attract()` function.
+
+Starting with `Particle:attract()`, the acceleration vector is not set to the force vector, but incremented by the vector's components.
+
+```lua
+self.acceleration.x = self.acceleration.x + force.x
+self.acceleration.y = self.acceleration.y + force.y
+```
+
+Without this change, the particles would consider only the last attractor (the last overrides the penultimate, which overrides the third to last until the very first).
+
+The force vector is also updated to push the particles away when reaching an arbitrary threshold.
+
+```lua
+if distance < DISTANCE_THRESHOLD then
+  force.x = force.x * -1
+  force.y = force.y * -1
+end
+```
+
+In `Particle:update`, finally, the vector describing the acceleration is reset after updating the velocity and position.
+
+```lua
+function Particle:update(dt)
+  -- update position and vector
+
+  self.acceleration.x = 0
+  self.acceleration.y = 0
+end
+```
+
+This is a direct consequence to the change introduced in the `attract` function, to avoid having the forces cumulate their influence frame after frame.
