@@ -59,3 +59,7 @@ Simulate the motion of fireworks and particles.
 Implement the necessary physics to have particles gravitate toward/away from a given object.
 
 **Live demo(s)**: [Gravitational Attraction](https://repl.it/@borntofrappe/Gravitational-Attraction), [Playground](https://repl.it/@borntofrappe/Gravitational-Playground)
+
+## Steering points
+
+Create a grid of points steering away from the mouse cursor and toward a resting position.
