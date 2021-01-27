@@ -2,10 +2,11 @@
 - [x] Create grid
   - [ ] rename project to 'Create grid'
 - [x] Read grid
-- [ ] Make points into particles subject to multiple forces
-  - [ ] attracted to original position
-  - [ ] repelled by mouse cursor
-  - [ ] repelled by other particles
+  - [ ] remove points from grid arguments
+- [x] Make points into particles subject to multiple forces
+  - [x] attracted to original position
+  - [x] repelled by mouse cursor
+  ~- [ ] repelled by other particles~
  -->
 
 # Steering Points
@@ -43,3 +44,5 @@ It is important to mention that the width and height of the window are set only 
 For the number columns the position of the first newline character `\n` gives the index of the character separating the first and second row.
 
 For the number of rows, instead, the number of newline characters `\n` points to one less than the actual value (since the last row ends with an `x` or `o`).
+
+## Steer grid
