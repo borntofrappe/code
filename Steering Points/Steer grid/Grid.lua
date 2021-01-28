@@ -29,10 +29,10 @@ function Grid:hasParticle(column, row)
   return self.particles[self:makeKey(column, row)]
 end
 
-function Grid:addParticle(column, row)
+function Grid:addParticle(column, row, matchTarget)
   local x = (column - 1) * CELL_SIZE + CELL_SIZE / 2
   local y = (row - 1) * CELL_SIZE + CELL_SIZE / 2
-  self.particles[self:makeKey(column, row)] = Particle:new(x, y)
+  self.particles[self:makeKey(column, row)] = Particle:new(x, y, matchTarget)
 end
 
 function Grid:removeParticle(column, row)
@@ -46,17 +46,7 @@ end
 function Grid:update(dt)
   for i, particle in pairs(self.particles) do
     particle:update(dt)
-
-    local attraction = particle:attract(particle.target)
-    particle:applyForce(attraction)
-
-    local friction = particle:getFriction()
-    particle:applyForce(friction)
-
-    local repulsion = particle:repelMouse()
-    if repulsion then
-      particle:applyForce(repulsion)
-    end
+    particle:applyBehaviors()
   end
 end
 

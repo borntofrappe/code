@@ -3,9 +3,12 @@ require "Grid"
 
 SEGMENTS = 20
 UPDATE_SPEED = 20
-VELOCITY_MIN = 20
-VELOCITY_MAX = 50
-VELOCITY_LIMIT = 15
+VELOCITY_MIN = 10
+VELOCITY_MAX = 20
+VELOCITY_LIMIT = 20
+STEERING_MULTIPLIER = 1
+FRICTION_MULTIPLIER = 0.75
+REPULSION_MULTIPLIER = 4
 
 STRING =
   [[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -49,6 +52,7 @@ function love.load()
   CELL_SIZE = 18
   PADDING = 2
   RADIUS = CELL_SIZE / 2 - PADDING
+  MOUSE_RADIUS = RADIUS * 4
 
   WINDOW_WIDTH = CELL_SIZE * columns
   WINDOW_HEIGHT = CELL_SIZE * rows
@@ -64,7 +68,7 @@ function love.load()
     if string:sub(i, i) == "o" then
       local column = ((i - 1) % columns) + 1
       local row = math.floor(i / columns) + 1
-      grid:addParticle(column, row)
+      grid:addParticle(column, row, false)
     end
   end
 end
@@ -114,7 +118,7 @@ function love.update(dt)
     local row = math.floor(y / CELL_SIZE) + 1
 
     if not grid:hasParticle(column, row) then
-      grid:addParticle(column, row)
+      grid:addParticle(column, row, true)
     end
   end
 
@@ -131,4 +135,8 @@ end
 
 function love.draw()
   grid:render()
+end
+
+function map(value, currentMin, currentMax, newMin, newMax)
+  return (value - currentMin) / (currentMax - currentMin) * (newMax - newMin) + newMin
 end

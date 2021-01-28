@@ -2,15 +2,15 @@ require "Grid"
 WINDOW_WIDTH = 650
 WINDOW_HEIGHT = 450
 
-CELL_SIZE = 25
+CELL_SIZE = 15
 COLUMNS = math.floor(WINDOW_WIDTH / CELL_SIZE)
 ROWS = math.floor(WINDOW_HEIGHT / CELL_SIZE)
-PADDING = 5
+PADDING = 2
 RADIUS = CELL_SIZE / 2 - PADDING
 SEGMENTS = 20
 
 function love.load()
-  love.window.setTitle("Steering points - Points")
+  love.window.setTitle("Steering points - Create grid")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
 

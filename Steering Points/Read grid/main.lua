@@ -40,7 +40,7 @@ function love.load()
   local string, rows = STRING:gsub("\n", "")
   rows = rows + 1
 
-  CELL_SIZE = 18
+  CELL_SIZE = 15
   PADDING = 2
   RADIUS = CELL_SIZE / 2 - PADDING
 

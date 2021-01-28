@@ -1,9 +1,11 @@
 Particle = {}
 Particle.__index = Particle
 
-function Particle:new(x, y)
-  local position = LVector:new(x, y)
-  local target = LVector:copy(position)
+function Particle:new(x, y, matchTarget)
+  local target = LVector:new(x, y)
+  local position =
+    matchTarget and LVector:copy(target) or
+    LVector:new(math.random(RADIUS, WINDOW_WIDTH - RADIUS), math.random(RADIUS, WINDOW_HEIGHT - RADIUS))
 
   local vx = math.random(VELOCITY_MIN, VELOCITY_MAX)
   local vy = math.random(VELOCITY_MIN, VELOCITY_MAX)
@@ -43,11 +45,24 @@ function Particle:applyForce(force)
   self.acceleration:add(force)
 end
 
-function Particle:attract(target)
+function Particle:applyBehaviors()
+  local steeringForce = self:steer(self.target)
+  self:applyForce(steeringForce)
+
+  local frictionForce = self:getFriction()
+  self:applyForce(frictionForce)
+
+  local repelForce = self:repelMouse()
+  if repelForce then
+    self:applyForce(repelForce)
+  end
+end
+
+function Particle:steer(target)
   local force = LVector:subtract(target, self.position)
   local d = force:getMagnitude()
   force:normalize()
-  force:multiply(d)
+  force:multiply(d * STEERING_MULTIPLIER)
 
   return force
 end
@@ -57,8 +72,7 @@ function Particle:getFriction()
   local d = force:getMagnitude()
 
   force:normalize()
-  force:divide(2)
-  force:multiply(d * -1)
+  force:multiply(d * FRICTION_MULTIPLIER * -1)
 
   return force
 end
@@ -69,9 +83,9 @@ function Particle:repelMouse()
   local force = LVector:subtract(position, self.position)
   local d = force:getMagnitude()
 
-  if d < RADIUS * 4 then
+  if d < MOUSE_RADIUS then
     force:normalize()
-    force:multiply(d * 4 * -1)
+    force:multiply(d * REPULSION_MULTIPLIER * -1)
     return force
   end
 end
