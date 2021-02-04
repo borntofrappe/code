@@ -63,3 +63,7 @@ Implement the necessary physics to have particles gravitate toward/away from a g
 ## Steering points
 
 Create a grid of points steering away from the mouse cursor and toward a resting position.
+
+## Traveling Salesperson
+
+Find the shortest path connecting a series of points.
