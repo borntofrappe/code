@@ -15,3 +15,11 @@ The project introduces an algorithm to solve a specific problem: arranging a ser
 The algorithm is the topic of [a discussion on quora](https://www.quora.com/How-would-you-explain-an-algorithm-that-generates-permutations-using-lexicographic-ordering).
 
 The demo itself creates the possible permutations and adds the matching string to a table, which is then displayed in the window.
+
+## Lexicographic TS
+
+The folder merges the code developed in the previous two demos, so that the program finds an answer to the traveling salesperson problem by considering each and every possibility. The solution is found, but the number of points is limited to avoid running the program for too long. This is solved by future exercises describing more efficient solutions.
+
+Instead of modifying the order of the `points` table, the script creates a separate collection for the indexes, and modifies the order of these values. `getPaths`, `getTotalDistance` are updated to consider the points in the order arranged by the indexes, at each iteration, so that eventually, the demo is able to consider every possible set of points.
+
+_Please note:_ the script includes a function to compete the factorial, so that it is possible to describe how many permutations are left.
