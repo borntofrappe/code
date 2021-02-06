@@ -18,10 +18,16 @@ The demo itself creates the possible permutations and adds the matching string t
 
 ## Lexicographic TS
 
-The folder merges the code developed in the previous two demos, so that the program finds an answer to the traveling salesperson problem by considering each and every possibility. The solution is found, but the number of points is limited to avoid running the program for too long. This is solved by future exercises describing more efficient solutions.
+The folder merges the code developed in the previous two demos, so that the program finds an answer to the traveling salesperson problem by considering each and every possibility. The solution is found, but the number of points is limited to avoid running the program for too long.
 
 Instead of modifying the order of the `points` table, the script creates a separate collection for the indexes, and modifies the order of these values. `getPaths`, `getTotalDistance` are updated to consider the points in the order arranged by the indexes, at each iteration, so that eventually, the demo is able to consider every possible set of points.
 
 _Please note:_ the script includes a function to compete the factorial, so that it is possible to describe how many permutations are left.
 
 ## Genetic algorithm TS
+
+The problem of finding the shortest path is tackled with a genetic algorithm. This is achieved by having a population describe a series of indexes at random. With each iteration, the program considers the fitness of each member of the population, before creating a new population out of the best performing indexes.
+
+With each iteration, the program also evaluates the total distance of the best fit, and updates the paths if said distance is less than the record one.
+
+_Please note:_ as opposed to the lexicographic demo, which has an eventual stopping point as the script tries every permutation, the demo does not reach a conclusion. Eventually, the algorithm settles on a sequence of indexes, but the number of generations continues indefinitely.

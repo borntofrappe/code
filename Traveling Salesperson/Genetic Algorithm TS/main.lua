@@ -11,7 +11,7 @@ POINT_RADIUS = 5
 
 LINE_WIDTH = 2
 
-SIZE = 5
+POPULATION_SIZE = 5
 
 function love.load()
   love.window.setTitle("Traveling salesperson - Genetic Algorithm TS")
@@ -20,7 +20,13 @@ function love.load()
 
   math.randomseed(os.time())
 
-  population = Population:new(SIZE)
+  population = Population:new(POPULATION_SIZE)
+end
+
+function love.mousepressed(x, y, button)
+  if button == 1 then
+    population = Population:new(POPULATION_SIZE)
+  end
 end
 
 function love.update(dt)
@@ -29,4 +35,10 @@ end
 
 function love.draw()
   population:render()
+end
+
+function swap(t, i, j)
+  local temp = t[i]
+  t[i] = t[j]
+  t[j] = temp
 end

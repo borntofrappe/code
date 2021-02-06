@@ -22,12 +22,6 @@ function Population:new(size)
   end
 
   local paths = {}
-  for i = 1, #points - 1 do
-    table.insert(
-      paths,
-      Path:new(points[i].position.x, points[i].position.y, points[i + 1].position.x, points[i + 1].position.y)
-    )
-  end
 
   local this = {
     ["size"] = size,
@@ -137,11 +131,10 @@ function Population:generate()
   local population = {}
   for i = 1, self.size do
     local indexes = self:select(maxFitness)
-    local index1 = math.random(#indexes)
-    local index2 = math.random(#indexes)
-    local t = indexes[index1]
-    indexes[index1] = indexes[index2]
-    indexes[index2] = t
+    -- alter the indexes of the selected collection swapping two consecutive values
+    local i1 = math.random(#indexes)
+    local i2 = i1 > 1 and i1 - 1 or i1 + 1
+    swap(indexes, i1, i2)
     table.insert(population, indexes)
   end
 
