@@ -67,3 +67,5 @@ Create a grid of points steering away from the mouse cursor and toward a resting
 ## Traveling Salesperson
 
 Find the shortest path connecting a series of points.
+
+**Live demo(s)**: [Lexicographic TS](https://repl.it/@borntofrappe/Traveling-Salesperson/Lexicographic), [Genetic Algorithm TS](https://repl.it/@borntofrappe/Traveling-Salesperson/Genetic-Algorithm), [Crossover GA TS](https://repl.it/@borntofrappe/Traveling-Salesperson/Crossover)
