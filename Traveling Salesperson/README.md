@@ -31,3 +31,32 @@ The problem of finding the shortest path is tackled with a genetic algorithm. Th
 With each iteration, the program also evaluates the total distance of the best fit, and updates the paths if said distance is less than the record one.
 
 _Please note:_ as opposed to the lexicographic demo, which has an eventual stopping point as the script tries every permutation, the demo does not reach a conclusion. Eventually, the algorithm settles on a sequence of indexes, but the number of generations continues indefinitely.
+
+## Crossover GA TS
+
+The idea of the final demo is to build on top of the genetic algorithm and tweak how the new population is created.
+
+Instead of modifying the selected collection swapping two indexes at random.
+
+```lua
+local indexes = self:select(maxFitness)
+local i1 = math.random(#indexes)
+local i2 = i1 > 1 and i1 - 1 or i1 + 1
+swap(indexes, i1, i2)
+table.insert(population, indexes)
+```
+
+The idea is to pick two collections, two parents so to speak, and create a new collection mixing, crossing the two together.
+
+```lua
+local p1 = self:select(maxFitness)
+local p2 = self:select(maxFitness)
+local indexes = self:crossOver(p1, p2)
+table.insert(population, indexes)
+```
+
+The crossing algorithm is implemented by picking as follows:
+
+- pick a sequence of indexes from the first parent
+
+- loop through the indexes of the second parent, and complete the `indexes` table with the values of the second parent that are not already included with the first
