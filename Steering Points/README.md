@@ -47,3 +47,14 @@ There are specifically three forces:
 - a force slowing down the particle (friction)
 
 - a force pushing the particle away from the mouse, but only when the mouse is within a prescribed area (repel)
+
+## Pattern grid
+
+The goal is to have different patterns and change the configuration of the steering points by pressing a specific key:
+
+- `r` for a rocket,
+- `b` for blog,
+- `c` for codepen,
+- `f` for freecodecamp,
+- `g` for github,
+- `t` for twitter
