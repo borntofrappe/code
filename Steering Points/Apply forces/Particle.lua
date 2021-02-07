@@ -1,11 +1,9 @@
 Particle = {}
 Particle.__index = Particle
 
-function Particle:new(x, y, matchTarget)
+function Particle:new(x, y)
   local target = LVector:new(x, y)
-  local position =
-    matchTarget and LVector:copy(target) or
-    LVector:new(math.random(RADIUS, WINDOW_WIDTH - RADIUS), math.random(RADIUS, WINDOW_HEIGHT - RADIUS))
+  local position = LVector:new(math.random(RADIUS, WINDOW_WIDTH - RADIUS), math.random(RADIUS, WINDOW_HEIGHT - RADIUS))
 
   local vx = math.random(VELOCITY_MIN, VELOCITY_MAX)
   local vy = math.random(VELOCITY_MIN, VELOCITY_MAX)
@@ -45,47 +43,38 @@ function Particle:applyForce(force)
   self.acceleration:add(force)
 end
 
-function Particle:applyBehaviors()
-  local steeringForce = self:steer(self.target)
-  self:applyForce(steeringForce)
+function Particle:applyBehaviors(mouse)
+  local dirTarget = LVector:subtract(self.target, self.position)
+  local distanceTargt = dirTarget:getMagnitude()
+  if distanceTargt > FORCE_RADIUS then
+    self:applyForce(self:steer(dirTarget, distanceTargt))
+    self:applyForce(self:getFriction())
+  end
 
-  local frictionForce = self:getFriction()
-  self:applyForce(frictionForce)
-
-  local repelForce = self:repelMouse()
-  if repelForce then
-    self:applyForce(repelForce)
+  local dirMouse = LVector:subtract(mouse, self.position)
+  local distanceMouse = dirMouse:getMagnitude()
+  if distanceMouse < MOUSE_RADIUS then
+    self:applyForce(self:repelMouse(dirMouse, distanceMouse))
   end
 end
 
-function Particle:steer(target)
-  local force = LVector:subtract(target, self.position)
-  local d = force:getMagnitude()
+function Particle:steer(force, distance)
   force:normalize()
-  force:multiply(d * STEERING_MULTIPLIER)
-
+  local randomNoise = LVector:new(math.random() - 0.5, math.random() - 0.5)
+  randomNoise:multiply(NOISE_MULTIPLIER)
+  force:add(randomNoise)
+  force:multiply(distance * STEERING_MULTIPLIER)
   return force
 end
 
 function Particle:getFriction()
   local force = LVector:copy(self.velocity)
-  local d = force:getMagnitude()
-
-  force:normalize()
-  force:multiply(d * FRICTION_MULTIPLIER * -1)
-
+  force:multiply(FRICTION_MULTIPLIER * -1)
   return force
 end
 
-function Particle:repelMouse()
-  local x, y = love.mouse:getPosition()
-  local position = LVector:new(x, y)
-  local force = LVector:subtract(position, self.position)
-  local d = force:getMagnitude()
-
-  if d < MOUSE_RADIUS then
-    force:normalize()
-    force:multiply(d * REPULSION_MULTIPLIER * -1)
-    return force
-  end
+function Particle:repelMouse(force, distance)
+  force:normalize()
+  force:multiply(distance * REPULSION_MULTIPLIER * -1)
+  return force
 end

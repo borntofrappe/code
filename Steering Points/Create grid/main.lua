@@ -1,8 +1,10 @@
+require "Point"
 require "Grid"
-WINDOW_WIDTH = 650
-WINDOW_HEIGHT = 450
 
-CELL_SIZE = 15
+WINDOW_WIDTH = 500
+WINDOW_HEIGHT = 500
+
+CELL_SIZE = 20
 COLUMNS = math.floor(WINDOW_WIDTH / CELL_SIZE)
 ROWS = math.floor(WINDOW_HEIGHT / CELL_SIZE)
 PADDING = 2
@@ -14,11 +16,10 @@ function love.load()
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
 
-  grid = Grid:new(COLUMNS, ROWS)
+  grid = Grid:new()
 end
 
 function love.keypressed(key)
-  local key = key:lower()
   if key == "e" then
     grid:removePoints()
   elseif key == "g" then
@@ -43,11 +44,11 @@ function love.keypressed(key)
     end
 
     local string = table.concat(characters)
-    love.filesystem.setIdentity("Points")
-    love.filesystem.write("points.txt", string)
+    love.filesystem.setIdentity("Steering Points")
+    love.filesystem.write("grid.txt", string)
   elseif key == "p" then
-    love.filesystem.setIdentity("Points")
-    love.graphics.captureScreenshot("points.png")
+    love.filesystem.setIdentity("Steering Points")
+    love.graphics.captureScreenshot("grid.png")
   elseif key == "escape" then
     love.event.quit()
   end

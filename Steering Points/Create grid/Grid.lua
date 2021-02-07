@@ -1,14 +1,12 @@
-require "Point"
-
 Grid = {}
 Grid.__index = Grid
 
-function Grid:new(columns, rows)
+function Grid:new()
   local points = {}
 
   this = {
-    ["columns"] = columns,
-    ["rows"] = rows,
+    ["columns"] = COLUMNS,
+    ["rows"] = ROWS,
     ["points"] = points,
     ["showGridLines"] = false
   }
@@ -17,16 +15,16 @@ function Grid:new(columns, rows)
   return this
 end
 
-function Grid:toggleGridLines()
-  self.showGridLines = not self.showGridLines
-end
-
 function Grid:makeKey(column, row)
   return "c" .. column .. "r" .. row
 end
 
 function Grid:hasPoint(column, row)
   return self.points[self:makeKey(column, row)]
+end
+
+function Grid:toggleGridLines()
+  self.showGridLines = not self.showGridLines
 end
 
 function Grid:addPoint(column, row)
@@ -44,7 +42,7 @@ function Grid:removePoints()
 end
 
 function Grid:render()
-  love.graphics.setColor(1, 1, 1)
+  love.graphics.setColor(1, 1, 1, 1)
 
   if self.showGridLines then
     love.graphics.setLineWidth(1)
