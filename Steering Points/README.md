@@ -106,3 +106,20 @@ Building on top of the project applying multiple forces, the idea is to change t
 The particle system now receives a string, and populates the `particles` table to follow the `x` and `o` convention introduced earlier.
 
 It is important to note that pressing a key does not update the target position of the particles. The particle system is instead re-initialized building an entire different collection of particles. The demo which follows try to implement this feature.
+
+## Update grid
+
+`particles` is immediately modified to include the particles in a sequence, not a table with key-value pairs. The key is indeed unnecessary, and has been unnecessary since the project which needed to add/remove points following a key press.
+
+```lua
+table.insert(particles, Particle:new(position, target, particleRadius))
+```
+
+The `Particle` entity is also modified to receive two vectors, describing the position and target. This is helpful in the moment new particles are positioned (at first) on top of existing ones.
+
+```lua
+function Particle:new(position, target, r)
+end
+```
+
+With this structure, and in order to update the particle system to follow the instructions of a new string, the idea is to update the particles by modifying the `target` vector. If necessary then, the idea is to add/remove particles to consider the different number of `o` characters between strings.
