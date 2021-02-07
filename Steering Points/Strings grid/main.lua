@@ -1,24 +1,6 @@
 LVector = require "Lvector"
-require "Grid"
-
-WINDOW_WIDTH = 500
-WINDOW_HEIGHT = 500
-WINDOW_PADDING = 20
-
-GRID_SIZE = WINDOW_WIDTH
-CELL_DIMENSION = 20
-CELL_SIZE = math.floor(GRID_SIZE / CELL_DIMENSION)
-CELL_PADDING = CELL_SIZE * 0.25
-
-CIRCLE_SEGMENTS = 20
-
-UPDATE_SPEED = 20
-VELOCITY_MIN = 10
-VELOCITY_MAX = 20
-VELOCITY_LIMIT = 20
-STEERING_MULTIPLIER = 1
-FRICTION_MULTIPLIER = 0.75
-REPULSION_MULTIPLIER = 4
+require "Particle"
+require "ParticleSystem"
 
 STRINGS = {
   ["rocket"] = [[xxxxxxxxxxxxxxxxxxxx
@@ -81,26 +63,6 @@ xxxxxooooooxxxxxxooo
 xxxxxxooooooooooooox
 xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx]],
-  ["github"] = [[xxxxxxxxxxxxxxxxxxxx
-xxxoooxxxooxxxoooxxx
-xxooxooooooooooxooxx
-xxooxxxxxxxxxxxxooxx
-xxxooxxxxxxxxxxooxxx
-xxxooxxxxxxxxxxooxxx
-xxooxxxxxxxxxxxxooxx
-xxooxxxxxxxxxxxxooxx
-xxooxxxxxxxxxxxxooxx
-xxooxxxxxxxxxxxxooxx
-xxxooxxxxxxxxxxooxxx
-xxxxoooooooooooooxxx
-xxxxxoooooooooooxxxx
-xxxxxoxxxxxxxxooxxxx
-xxxxooxoxooxoxooxxxx
-xxxxoxxoxooxoxxoxxxx
-xxxxoxooxooxooxoxxxx
-xxxooooooooooooooxxx
-xxoooxxooxxooxxoooxx
-xxxxxxxxxxxxxxxxxxxx]],
   ["freecodecamp"] = [[xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx
 xxxooxxxxxxxxxxooxxx
@@ -121,7 +83,27 @@ xxooxxxxooooxxxxooxx
 xxxooxxxxxxxxxxooxxx
 xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx]],
-  ["twitter"] = [[xxxxxxxxxxxxxxxxx
+  ["github"] = [[xxxxxxxxxxxxxxxxxxxx
+xxxoooxxxooxxxoooxxx
+xxooxooooooooooxooxx
+xxooxxxxxxxxxxxxooxx
+xxxooxxxxxxxxxxooxxx
+xxxooxxxxxxxxxxooxxx
+xxooxxxxxxxxxxxxooxx
+xxooxxxxxxxxxxxxooxx
+xxooxxxxxxxxxxxxooxx
+xxooxxxxxxxxxxxxooxx
+xxxooxxxxxxxxxxooxxx
+xxxxoooooooooooooxxx
+xxxxxoooooooooooxxxx
+xxxxxoxxxxxxxxooxxxx
+xxxxooxoxooxoxooxxxx
+xxxxoxxoxooxoxxoxxxx
+xxxxoxooxooxooxoxxxx
+xxxooooooooooooooxxx
+xxoooxxooxxooxxoooxx
+xxxxxxxxxxxxxxxxxxxx]],
+  ["twitter"] = [[xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxooooxxxxx
 xxxxxxxxxxooooooxxxx
 xoxxxxxxxooxxxxooxxx
@@ -143,42 +125,48 @@ xxxxxooooooxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx]]
 }
 
+WINDOW_SIZE = 500
+WINDOW_PADDING = 20
+
+UPDATE_SPEED = 15
+VELOCITY_MIN = 10
+VELOCITY_MAX = 20
+VELOCITY_LIMIT = 20
+FORCE_RADIUS_MULTIPLIER = 0.25
+MOUSE_RADIUS_MULTIPLIER = 4
+STEERING_MULTIPLIER = 1
+NOISE_MULTIPLIER = 0.5
+FRICTION_MULTIPLIER = 0.8
+REPULSION_MULTIPLIER = 4
+
 function love.load()
-  love.window.setTitle("Steering points - Pattern Grid")
-  love.window.setMode(WINDOW_WIDTH + WINDOW_PADDING * 2, WINDOW_HEIGHT + WINDOW_PADDING * 2)
+  love.window.setTitle("Steering points - Strings grid")
+  love.window.setMode(WINDOW_SIZE, WINDOW_SIZE)
   love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
 
-  math.randomseed(os.time())
-
-  grid = Grid:new()
-  grid:setParticles(STRINGS.rocket)
+  particleSystem = ParticleSystem:new()
 end
 
 function love.keypressed(key)
   if key == "r" then
-    grid:setParticles(STRINGS.rocket)
+    particleSystem = ParticleSystem:new(STRINGS.rocket)
   elseif key == "b" then
-    grid:setParticles(STRINGS.blog)
+    particleSystem = ParticleSystem:new(STRINGS.blog)
   elseif key == "c" then
-    grid:setParticles(STRINGS.codepen)
+    particleSystem = ParticleSystem:new(STRINGS.codepen)
   elseif key == "f" then
-    grid:setParticles(STRINGS.freecodecamp)
+    particleSystem = ParticleSystem:new(STRINGS.freecodecamp)
   elseif key == "g" then
-    grid:setParticles(STRINGS.github)
+    particleSystem = ParticleSystem:new(STRINGS.github)
   elseif key == "t" then
-    grid:setParticles(STRINGS.twitter)
+    particleSystem = ParticleSystem:new(STRINGS.twitter)
   end
 end
 
 function love.update(dt)
-  grid:update(dt)
+  particleSystem:update(dt)
 end
 
 function love.draw()
-  love.graphics.translate(WINDOW_PADDING, WINDOW_PADDING)
-  grid:render()
-end
-
-function map(value, currentMin, currentMax, newMin, newMax)
-  return (value - currentMin) / (currentMax - currentMin) * (newMax - newMin) + newMin
+  particleSystem:render()
 end

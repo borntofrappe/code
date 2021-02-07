@@ -90,13 +90,19 @@ The forces are then applied with a specific design:
   end
   ```
 
-## Pattern grid
+## Strings grid
 
-The goal is to have different patterns and change the configuration of the steering points by pressing a specific key:
+Building on top of the project applying multiple forces, the idea is to change the configuration of the particles following a key press, and in order to draw the outline for different visuals.
 
-- `r` for a rocket,
-- `b` for blog,
-- `c` for codepen,
-- `f` for freecodecamp,
-- `g` for github,
-- `t` for twitter
+| Key | Visual       |
+| --- | ------------ |
+| r   | rocket       |
+| b   | blog         |
+| c   | codepen      |
+| f   | freecodecamp |
+| g   | github       |
+| t   | twitter      |
+
+The particle system now receives a string, and populates the `particles` table to follow the `x` and `o` convention introduced earlier.
+
+It is important to note that pressing a key does not update the target position of the particles. The particle system is instead re-initialized building an entire different collection of particles. The demo which follows try to implement this feature.
