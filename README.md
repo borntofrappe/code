@@ -64,6 +64,8 @@ Implement the necessary physics to have particles gravitate toward/away from a g
 
 Create a grid of points steering away from the mouse cursor and toward a resting position.
 
+**Live demo(s)**: [Steering World](https://repl.it/@borntofrappe/Steering-Points/World), [Steering Icons](https://repl.it/@borntofrappe/Steering-Points/Icons)
+
 ## Traveling Salesperson
 
 Find the shortest path connecting a series of points.
