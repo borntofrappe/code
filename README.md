@@ -64,10 +64,10 @@ Implement the necessary physics to have particles gravitate toward/away from a g
 
 Create a grid of points steering away from the mouse cursor and toward a resting position.
 
-**Live demo(s)**: [Steering World](https://repl.it/@borntofrappe/Steering-Points/World), [Steering Icons](https://repl.it/@borntofrappe/Steering-Points/Icons)
+**Live demo(s)**: [Steering World](https://repl.it/@borntofrappe/Steering-World), [Steering Icons](https://repl.it/@borntofrappe/Steering-Icons)
 
 ## Traveling Salesperson
 
 Find the shortest path connecting a series of points.
 
-**Live demo(s)**: [Lexicographic TS](https://repl.it/@borntofrappe/Traveling-Salesperson/Lexicographic), [Genetic Algorithm TS](https://repl.it/@borntofrappe/Traveling-Salesperson/Genetic-Algorithm), [Crossover GA TS](https://repl.it/@borntofrappe/Traveling-Salesperson/Crossover)
+**Live demo(s)**: [Lexicographic Traveling Salesperson](https://repl.it/@borntofrappe/Lexicographic-Traveling-Salesperson#main.lua), [Genetic Algorithm Traveling Salesperson](https://repl.it/@borntofrappe/Genetic-Algorithm-Traveling-Salesperson#main.lua)
