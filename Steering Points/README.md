@@ -1,6 +1,6 @@
 # Steering Points
 
-The project is inspired by [a coding challenge](https://youtu.be/4hA7G3gup-4) from [The Coding Train](https://thecodingtrain.com/), and might actually involve a series of demos to ultimately create a grid of points tracing an outline.
+The project is inspired by [a coding challenge](https://youtu.be/4hA7G3gup-4) from [The Coding Train](https://thecodingtrain.com/), and might actually involve a series of demos as I ultimately try to create a visual in which the particles move subject to forces and user (mouse) input.
 
 ## Create grid
 
@@ -18,7 +18,7 @@ The demo sets up a grid with a fixed number of columns and rows. This grid is mo
 
   - `g` to show the grid's lines
 
-It is also possible to write a file locally describing the grid. Press
+It is also possible to write a file locally by pressing:
 
 - `t` to create a `.txt` file where every empty cell is represented by an `x` and every point by `o` characters
 
@@ -26,9 +26,17 @@ It is also possible to write a file locally describing the grid. Press
 
 _Please note:_ the `.txt` and `.png` files are created in the default path described by the [`love.system`](https://love2d.org/wiki/love.filesystem) module.
 
+A special mention goes to the `makeKey` function. The idea is to have the `points` table populated only with the necessary points, not every possible column and row. In order to add and possibly remove these points, they are stored in the table with a key describing the position.
+
+```lua
+function Grid:makeKey(column, row)
+  return "c" .. column .. "r" .. row
+end
+```
+
 ## Read grid
 
-Starting from a string of `x`s and `o`s, much similar to one created with the previous demo, the goal is to populate a grid with points matching the second character.
+Starting from a sequence of `x`s and `o`s, much similar to one created with the previous demo, the goal is to populate a grid with points for every `o` character.
 
 It is important to mention that the width and height of the window are set only after the script is able to discern the number of columns and rows.
 
@@ -36,17 +44,51 @@ For the number columns the position of the first newline character `\n` gives th
 
 For the number of rows, instead, the number of newline characters `\n` points to one less than the actual value (since the last row ends with an `x` or `o`).
 
-## Steer grid
+The demo removes the possibility to modify the grid of points, as well as save the visual in the `.txt` and `.png` formats. This is in order to focus on the reading logic.
 
-Building on top of the `Read grid` demo, the goal is to update the points to be particles with a position, velocity and acceleration. The acceleration is then modified to have the particles repelled by the mouse cursor, but always attracted to their original position.
+## Apply forces
 
-There are specifically three forces:
+Building on top of the `Read grid` demo, the goal is to update the grid and points to have a particle system and particles instead. Each particle is attributed a position, velocity and acceleration. The acceleration is then modified to have the particles repelled by the mouse cursor, but always attracted to their original position.
 
-- a force pushing the particles to a target vector (steer)
+The position of the mouse is updated in the particle system, to avoid computing the `x` and `y` coordinate in every instance of the particle entity.
 
-- a force slowing down the particle (friction)
+```lua
+function ParticleSystem:update(dt)
+  self.mouse = LVector:new(love.mouse:getPosition())
+end
+```
 
-- a force pushing the particle away from the mouse, but only when the mouse is within a prescribed area (repel)
+The forces are then applied with a specific design:
+
+- steer toward the target and apply friction when the particle is offset from the target itself
+
+  ```lua
+  FORCE_RADIUS = RADIUS / 4
+
+  if distanceTargt > FORCE_RADIUS then
+    -- steering and friction
+  end
+  ```
+
+  The end result is that the particles jiggle around the desired coordinates. Without this threshold, the particles would eventually slow down to the precise `x` and `y` location.
+
+  To avoid a perfectly symmetric jiggle, the steering force is also modified at random.
+
+  ```lua
+  local randomNoise = LVector:new(math.random() - 0.5, math.random() - 0.5)
+  randomNoise:multiply(NOISE_MULTIPLIER)
+  force:add(randomNoise)
+  ```
+
+- repel the mouse when the mouse itself is closer than a given range
+
+  ```lua
+  MOUSE_RADIUS = RADIUS * 4
+
+  if distanceMouse < MOUSE_RADIUS then
+    -- repel
+  end
+  ```
 
 ## Pattern grid
 
