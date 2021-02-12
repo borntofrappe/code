@@ -1,0 +1,65 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+main > * + * {
+  margin-top: 1rem;
+}
+
+main canvas {
+  display: block;
+  width: 80vmin;
+  height: 80vmin;
+  min-width: 250px;
+  min-height: 250px;
+  max-width: 400px;
+  max-height: 400px;
+}
+
+main section {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 500px;
+}
+
+main section > * + * {
+  margin-left: 0.5rem;
+}
+
+main section a {
+  text-decoration: none;
+  color: inherit;
+  text-transform: capitalize;
+  letter-spacing: 1px;
+  font-size: 1.2rem;
+  font-family: monospace;
+  position: relative;
+  z-index: 5;
+  padding: 0.2rem;
+}
+
+main section a::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  background: currentColor;
+  transform: scaleY(0.2);
+  transform-origin: 50% 100%;
+  z-index: -5;
+}
+
+main section a.active::before {
+  transform: scaleY(1);
+}

@@ -107,7 +107,7 @@ The particle system now receives a string, and populates the `particles` table t
 
 It is important to note that pressing a key does not update the target position of the particles. The particle system is instead re-initialized building an entire different collection of particles. The demo which follows try to implement this feature.
 
-## Update grid
+## Lua Particles
 
 `particles` is immediately modified to include the particles in a sequence, not a table with key-value pairs. The key is indeed unnecessary, and has been unnecessary since the project which needed to add/remove points following a key press.
 
@@ -123,3 +123,7 @@ end
 ```
 
 With this structure, and in order to update the particle system to follow the instructions of a new string, the idea is to update the particles by modifying the `target` vector. If necessary then, the idea is to add/remove particles to consider the different number of `o` characters between strings.
+
+## JavaScript Particles
+
+The concept is recreated with the JavaScript language. The grid of particles is rendered through the Canvas API, animated with `requestAnimationFrame` and updated through mouse or keyboard input.
