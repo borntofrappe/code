@@ -1,6 +1,8 @@
-# [Fireworks](https://repl.it/@borntofrappe/Fireworks)
+# Fireworks
 
-With this project I set out to simulate fireworks following the example provided in [this coding challenge](https://thecodingtrain.com/CodingChallenges/027-fireworks.html) from [the coding train](https://thecodingtrain.com/) website. The approach is slightly different, the demo is implemented in Lua and Love2D instead of Processing or again JavaScript, but the rules, the physics governing the motion of the particles is the same.
+With this project I set out to simulate fireworks following the example provided in [this coding challenge](https://thecodingtrain.com/CodingChallenges/027-fireworks.html) from [the coding train](https://thecodingtrain.com/) website. The approach is slightly different, the demo is implemented in Lua and Love2D instead of Processing, but the rules, the physics governing the motion of the particles is the same.
+
+To reiterate the point, the demo is recreated with JavaScript and the Canvas API.
 
 ## Physics
 
@@ -158,3 +160,7 @@ if #self.trail > POINTS_TRAIL then
   table.remove(self.trail)
 end
 ```
+
+---
+
+## JavaScript and Canvas API
