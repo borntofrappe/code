@@ -1,10 +1,9 @@
 class Particle {
-  constructor(r, position, velocity, acceleration, color) {
-    this.r = r;
+  constructor(position, velocity, acceleration, r) {
     this.position = position;
     this.velocity = velocity;
     this.acceleration = acceleration;
-    this.color = color;
+    this.r = r;
   }
 
   update() {
@@ -16,9 +15,9 @@ class Particle {
   }
 
   show(context) {
-    context.fillStyle = this.color;
     context.beginPath();
-    context.arc(this.position.x, this.position.y, this.position.r, 0, Math.PI * 2);
+    context.arc(this.position.x, this.position.y, this.r, 0, Math.PI * 2);
+    context.fill();
     context.closePath();
   }
 }
