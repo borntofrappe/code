@@ -140,7 +140,7 @@ FRICTION_MULTIPLIER = 0.8
 REPULSION_MULTIPLIER = 4
 
 function love.load()
-  love.window.setTitle("Steering points - Strings grid")
+  love.window.setTitle("Jittering Particles - Multiple Strings")
   love.window.setMode(WINDOW_SIZE, WINDOW_SIZE)
   love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
 

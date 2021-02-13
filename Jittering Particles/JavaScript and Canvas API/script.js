@@ -21,6 +21,7 @@ let { width: size } = canvas.getBoundingClientRect();
 canvas.width = size;
 canvas.height = size;
 const context = canvas.getContext('2d');
+const { color } = getComputedStyle(document.body);
 
 const links = document.querySelectorAll('main section a');
 
@@ -28,10 +29,13 @@ let mouse = null;
 const VLib = new VectorLib();
 
 const particleSystem = new ParticleSystem(initialKey, size);
+
+context.fillStyle = color;
 particleSystem.show(context);
 
 function animate() {
   context.clearRect(0, 0, size, size);
+  context.fillStyle = color;
 
   particleSystem.update(mouse);
   particleSystem.show(context);
@@ -73,12 +77,14 @@ window.addEventListener('keypress', function(e) {
 
 window.addEventListener('resize', function() {
   const { width } = canvas.getBoundingClientRect();
-  size = width;
-  canvas.width = size;
-  canvas.height = size;
-
-  particleSystem.resize(size);
-  particleSystem.show(context);
+  if (width !== size) {
+    size = width;
+    canvas.width = size;
+    canvas.height = size;
+  
+    particleSystem.resize(size);
+    particleSystem.show(context);
+  }
 });
 
 links.forEach(link =>

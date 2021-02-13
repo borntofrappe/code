@@ -1,6 +1,8 @@
 * {
   box-sizing: border-box;
   margin: 0;
+  background: hsl(0, 0%, 17%);
+  color: hsl(0, 0%, 100%);
 }
 
 main {
@@ -55,9 +57,10 @@ main section a::before {
   height: 100%;
   opacity: 0.2;
   background: currentColor;
-  transform: scaleY(0.2);
+  transform: scaleY(0.05);
   transform-origin: 50% 100%;
   z-index: -5;
+  transition: transform 0.2s ease-in-out;
 }
 
 main section a.active::before {

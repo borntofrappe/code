@@ -12,7 +12,7 @@ RADIUS = CELL_SIZE / 2 - PADDING
 SEGMENTS = 20
 
 function love.load()
-  love.window.setTitle("Steering points - Create grid")
+  love.window.setTitle("Jittering Particles - Create Grid")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
 

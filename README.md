@@ -32,11 +32,13 @@ Program a game between two human players and a game against computer AI.
 
 Implement a series of algorithms to design twisty little passageways.
 
-**Keywords**: Lua, Love2D, algorithms
+**Keywords**: Lua, Love2D, algorithms, maze
 
 **Live demo(s)**: [Binary Tree](https://repl.it/@borntofrappe/maze-binary-tree), [Sidewinder](https://repl.it/@borntofrappe/maze-sidewinder), [Simplified Dijkstra](https://repl.it/@borntofrappe/maze-simplified-dijkstra), [Adlous Broder](https://repl.it/@borntofrappe/maze-aldous-broder), [Wilson](https://repl.it/@borntofrappe/maze-wilson), [Hunt and Kill](https://repl.it/@borntofrappe/maze-hunt-and-kill), [Recursive Backtracker](https://repl.it/@borntofrappe/maze-recursive-backtracker)
 
 ## Maze Shapes
+
+**Keywords**: Lua, Love2D, shape, maze
 
 Implement the recursive backtracker algorithm with mazes of different shape.
 
@@ -46,28 +48,38 @@ Implement the recursive backtracker algorithm with mazes of different shape.
 
 Project a series of lines against the surrounding environment.
 
+**Keywords**: Lua, Love2D, JavaScript, Canvas API
+
 **Live demo(s)**: [Lua and Love2D](https://repl.it/@borntofrappe/2D-Ray-Casting), [JavaScript and Canvas](https://codepen.io/borntofrappe/pen/rNMpPNj)
 
 ## Fireworks
 
 Simulate the motion of fireworks and particles.
 
+**Keywords**: Lua, Love2D
+
 **Live demo(s)**: [Fireworks](https://repl.it/@borntofrappe/Fireworks)
 
 ## Attraction and Repulsion
 
-Implement the necessary physics to have particles gravitate toward/away from a given object.
+Have particles attracted to or repelled from a given object.
+
+**Keywords**: Lua, Love2D, physics
 
 **Live demo(s)**: [Gravitational Attraction](https://repl.it/@borntofrappe/Gravitational-Attraction), [Playground](https://repl.it/@borntofrappe/Gravitational-Playground)
 
-## Steering points
+## Jittering Particles
 
-Create a grid of points steering away from the mouse cursor and toward a resting position.
+Move particles toward a resting position, and away from the course cursor
 
-**Live demo(s)**: [Steering World](https://repl.it/@borntofrappe/Steering-World), [Steering Icons](https://repl.it/@borntofrappe/Steering-Icons)
+**Keywords**: Lua, Love2D, JavaScript, Canvas API, physics
+
+**Live demo(s)**: [Lua and Love2D](https://repl.it/@borntofrappe/Jittering-Particles)
 
 ## Traveling Salesperson
 
 Find the shortest path connecting a series of points.
+
+**Keywords**: Lua, Love2D, algorithm, genetic algorithm
 
 **Live demo(s)**: [Lexicographic Traveling Salesperson](https://repl.it/@borntofrappe/Lexicographic-Traveling-Salesperson#main.lua), [Genetic Algorithm Traveling Salesperson](https://repl.it/@borntofrappe/Genetic-Algorithm-Traveling-Salesperson#main.lua)

@@ -142,7 +142,7 @@ SCATTER_VELOCITY_MIN = 20
 SCATTER_VELOCITY_MAX = 50
 
 function love.load()
-  love.window.setTitle("Steering points - Update grid")
+  love.window.setTitle("Jittering Particles")
   love.window.setMode(WINDOW_SIZE, WINDOW_SIZE)
   love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
 

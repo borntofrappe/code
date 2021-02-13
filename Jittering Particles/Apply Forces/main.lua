@@ -1,7 +1,7 @@
-require "Point"
-require "Grid"
+LVector = require "Lvector"
+require "Particle"
+require "ParticleSystem"
 
-SEGMENTS = 20
 STRING =
   [[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxoooxxxoxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -39,6 +39,16 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx]]
 CELL_SIZE = 15
 PADDING = 2
 RADIUS = CELL_SIZE / 2 - PADDING
+FORCE_RADIUS = RADIUS / 4
+MOUSE_RADIUS = RADIUS * 4
+UPDATE_SPEED = 15
+VELOCITY_MIN = 10
+VELOCITY_MAX = 20
+VELOCITY_LIMIT = 20
+STEERING_MULTIPLIER = 1
+FRICTION_MULTIPLIER = 0.8
+REPULSION_MULTIPLIER = 4
+NOISE_MULTIPLIER = 0.5
 
 function love.load()
   local columns = STRING:find("\n") - 1
@@ -48,11 +58,11 @@ function love.load()
   WINDOW_WIDTH = CELL_SIZE * columns
   WINDOW_HEIGHT = CELL_SIZE * rows
 
-  love.window.setTitle("Steering points - Read grid")
+  love.window.setTitle("Jittering Particles - Apply Forces")
   love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
   love.graphics.setBackgroundColor(0.17, 0.17, 0.17)
 
-  local points = {}
+  local particles = {}
   for i = 1, #string do
     if string:sub(i, i) == "o" then
       local column = ((i - 1) % columns) + 1
@@ -62,13 +72,17 @@ function love.load()
       local y = (row - 1) * CELL_SIZE + CELL_SIZE / 2
 
       local key = "c" .. column .. "r" .. row
-      points[key] = Point:new(x, y)
+      particles[key] = Particle:new(x, y)
     end
   end
 
-  grid = Grid:new(points)
+  particleSystem = ParticleSystem:new(particles)
+end
+
+function love.update(dt)
+  particleSystem:update(dt)
 end
 
 function love.draw()
-  grid:render()
+  particleSystem:render()
 end

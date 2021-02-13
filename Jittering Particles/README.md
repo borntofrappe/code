@@ -1,8 +1,8 @@
-# Steering Points
+# Jittering Particles
 
-The project is inspired by [a coding challenge](https://youtu.be/4hA7G3gup-4) from [The Coding Train](https://thecodingtrain.com/), and might actually involve a series of demos as I ultimately try to create a visual in which the particles move subject to forces and user (mouse) input.
+The project is inspired by [a coding challenge](https://youtu.be/4hA7G3gup-4) from [The Coding Train](https://thecodingtrain.com/), and involves a series of demos before I ultimately create a satisfactory simulation, with Lua and Love2D first, with JavaScript and the Canvas API afterwards.
 
-## Create grid
+## Create Grid
 
 The demo sets up a grid with a fixed number of columns and rows. This grid is modified with mouse and keyboard input by:
 
@@ -34,7 +34,7 @@ function Grid:makeKey(column, row)
 end
 ```
 
-## Read grid
+## Read Grid
 
 Starting from a sequence of `x`s and `o`s, much similar to one created with the previous demo, the goal is to populate a grid with points for every `o` character.
 
@@ -46,7 +46,7 @@ For the number of rows, instead, the number of newline characters `\n` points to
 
 The demo removes the possibility to modify the grid of points, as well as save the visual in the `.txt` and `.png` formats. This is in order to focus on the reading logic.
 
-## Apply forces
+## Apply Forces
 
 Building on top of the `Read grid` demo, the goal is to update the grid and points to have a particle system and particles instead. Each particle is attributed a position, velocity and acceleration. The acceleration is then modified to have the particles repelled by the mouse cursor, but always attracted to their original position.
 
@@ -90,7 +90,7 @@ The forces are then applied with a specific design:
   end
   ```
 
-## Strings grid
+## Multiple Strings
 
 Building on top of the project applying multiple forces, the idea is to change the configuration of the particles following a key press, and in order to draw the outline for different visuals.
 
@@ -107,9 +107,9 @@ The particle system now receives a string, and populates the `particles` table t
 
 It is important to note that pressing a key does not update the target position of the particles. The particle system is instead re-initialized building an entire different collection of particles. The demo which follows try to implement this feature.
 
-## Lua Particles
+## Lua and Love2D
 
-`particles` is immediately modified to include the particles in a sequence, not a table with key-value pairs. The key is indeed unnecessary, and has been unnecessary since the project which needed to add/remove points following a key press.
+`particles` is immediately modified to include the particles in a sequence, not a table with key-value pairs. The key is indeed unnecessary, and has been unnecessary since the project which needed to add and remove points following a key press.
 
 ```lua
 table.insert(particles, Particle:new(position, target, particleRadius))
@@ -122,8 +122,10 @@ function Particle:new(position, target, r)
 end
 ```
 
-With this structure, and in order to update the particle system to follow the instructions of a new string, the idea is to update the particles by modifying the `target` vector. If necessary then, the idea is to add/remove particles to consider the different number of `o` characters between strings.
+With this structure, and in order to update the particle system to follow the instructions of a new string, the idea is to update the particles by modifying the `target` vector. If necessary then, the idea is to add and remove particles to consider the different number of `o` characters between strings.
 
-## JavaScript Particles
+## JavaScript and Canvas API
 
-The concept is recreated with the JavaScript language. The grid of particles is rendered through the Canvas API, animated with `requestAnimationFrame` and updated through mouse or keyboard input.
+The concept is recreated with the JavaScript language and ES6 class syntax.
+
+The grid of particles is rendered with the Canvas API, animated with `requestAnimationFrame` and updated through mouse or keyboard input.
