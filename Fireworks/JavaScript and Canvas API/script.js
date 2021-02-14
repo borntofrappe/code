@@ -6,25 +6,43 @@ const { innerWidth, innerHeight } = window;
 document.body.innerHTML = `<canvas width="${innerWidth}" height="${innerHeight}"></canvas>`;
 
 const canvas = document.querySelector('canvas');
-const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = canvas;
+let { width, height } = canvas;
 const context = canvas.getContext('2d');
 
-const ODDS_FIREWORK = 70;
-const ODDS_FIREWORK_HEART = 5;
-const GRAVITY = 0.03;
-const VELOCITY_MIN = 3;
-const VELOCITY_MAX = 6;
+const HEIGHT_TO_GRAVITY_FIREWORK = 1 / 30000
+const GRAVITY_TO_VELOCITY_FIREWORK = 125;
+const HEIGHT_TO_GRAVITY_FRAGMENT = 1 / 180000;
+const VELOCITY_TO_THRESHOLD_FIREWORK = 1 / 6;
+const GRAVITY_TO_VELOCITY_FRAGMENT = 500;
+const VELOCITY_TO_FRAGMENT_HEART = 1 / 40;
+const FRAGMENT_HEART_VELOCITY = 1 / 40;
+const FRAGMENT_HEART_VELOCITY_CHANGE_MAX = 1/3;
 
-const PARTICLE_VELOCITY = 2;
-const PARTICLE_GRAVITY = 0.005;
+const FIREWORK_MAX = 5;
+const FIREWORK_ODDS = 1/70;
+const FIREWORK_HEART_ODDS = 1/5;
+let fireworkGravity = height * HEIGHT_TO_GRAVITY_FIREWORK;
+let fireworkVelocityMin = fireworkGravity * GRAVITY_TO_VELOCITY_FIREWORK;
+let fireworkVelocityMax = fireworkVelocityMin * 2;
+let fireworkVelocityThreshold = fireworkGravity * VELOCITY_TO_THRESHOLD_FIREWORK;
+const FIREWORK_RADIUS = 4;
+const FIREWORK_RADIUS_DECREASE = 1/50;
+
+let fragmentGravity = height * HEIGHT_TO_GRAVITY_FRAGMENT;
+let fragmentVelocity = fragmentGravity * GRAVITY_TO_VELOCITY_FRAGMENT;
+const FRAGMENT_RADIUS = 3;
+const FRAGMENT_RADIUS_DECREASE = 1/25;
+
+const degreesToRadians = (degrees) => degrees / 180 * Math.PI;
+const getColor = () => `hsl(${Math.floor(Math.random() * 360)}, 85%, 70%)`;
 
 let fireworks = [];
 
 function animate() {
-  context.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
-  if(Math.floor(Math.random() * ODDS_FIREWORK) === 1) {
-    if(Math.floor(Math.random() * ODDS_FIREWORK_HEART) === 1) {
-    fireworks.push(new HeartFirework())
+  context.clearRect(0, 0, width, height)
+  if(fireworks.length < FIREWORK_MAX && Math.random() > 1 - FIREWORK_ODDS) {
+    if(Math.random() > 1 - FIREWORK_HEART_ODDS) {
+      fireworks.push(new HeartFirework())
     }
     else {
     fireworks.push(new Firework())
@@ -45,3 +63,31 @@ function animate() {
   requestAnimationFrame(animate);
 }
 animate();
+
+window.addEventListener('click', () => {
+  if(fireworks.length < FIREWORK_MAX) {
+    if(Math.random() > 1 - FIREWORK_HEART_ODDS) {
+      fireworks.push(new HeartFirework())
+    } else {
+      fireworks.push(new Firework());
+    }
+  }
+})
+
+window.addEventListener('resize', function() {
+  const { innerWidth, innerHeight } = window;
+  if(innerWidth !== width || innerHeight !== height) {
+    width = innerWidth;
+    height = innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    fireworkGravity = height * HEIGHT_TO_GRAVITY_FIREWORK;
+    fireworkVelocityMin = fireworkGravity * GRAVITY_TO_VELOCITY_FIREWORK;
+    fireworkVelocityMax = fireworkVelocityMin * 2;
+    fireworkVelocityThreshold = fireworkGravity * VELOCITY_TO_THRESHOLD_FIREWORK;
+
+    fragmentGravity = height * HEIGHT_TO_GRAVITY_FRAGMENT;
+    fragmentVelocity = fragmentGravity * GRAVITY_TO_VELOCITY_FRAGMENT;
+  }
+})
