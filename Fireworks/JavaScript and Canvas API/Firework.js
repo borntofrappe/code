@@ -2,6 +2,7 @@ class Firework {
   constructor() {
     this.hasExpired = false;
     this.hasExploded = false;
+    this.color = `hsl(${Math.floor(Math.random() * 360)}, ${80}%, ${70}%)`;
 
     const position = {
       x: Math.random() * WINDOW_WIDTH,
@@ -19,8 +20,32 @@ class Firework {
       y: GRAVITY
     }
 
-    this.particle = new Particle(position, velocity, acceleration, 3, false);
+    this.particle = new Particle(position, velocity, acceleration, 4, false);
     this.fragments = [];
+  }
+
+  getFragments(x, y) {
+    const fragments = [];
+    for(let i = 0; i < 360; i += 1) {
+      const angle = i / 180 * Math.PI;
+      const position = {
+        x,
+        y
+      }
+      const distance = Math.random() * PARTICLE_VELOCITY
+      const vx = Math.cos(angle) * distance
+      const vy = Math.sin(angle) * distance
+      const velocity = {
+        x: vx,
+        y: vy,
+      }
+      const acceleration = {
+        x: 0,
+        y: PARTICLE_GRAVITY
+      }
+      fragments.push(new Fragment(position, velocity, acceleration, 3, true))
+    }
+    return fragments;
   }
 
   update() {
@@ -32,25 +57,7 @@ class Firework {
       ]
       if(this.particle.velocity.y > 0.5) {
         this.hasExploded = true;
-        for(let i = 0; i < 360; i += 1) {
-          const angle = i / 180 * Math.PI;
-          const position = {
-            x: this.particle.position.x,
-            y: this.particle.position.y
-          }
-          const distance = Math.random() * PARTICLE_VELOCITY
-          const vx = Math.cos(angle) * distance
-          const vy = Math.sin(angle) * distance
-          const velocity = {
-            x: vx,
-            y: vy,
-          }
-          const acceleration = {
-            x: 0,
-            y: PARTICLE_GRAVITY
-          }
-          this.fragments.push(new Fragment(position, velocity, acceleration,2, true))
-        }
+        this.fragments = this.getFragments(this.particle.position.x, this.particle.position.y)
       }
     } else {
       for(const fragment of this.fragments) {
@@ -64,7 +71,7 @@ class Firework {
   }
 
   show(context) {
-    context.fillStyle = 'rgb(255, 255, 255)';
+    context.fillStyle = this.color;
     if(!this.hasExploded) {
       this.particle.show(context);
     } else {

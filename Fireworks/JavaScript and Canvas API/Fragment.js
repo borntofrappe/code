@@ -5,6 +5,6 @@ class Fragment extends Particle {
 
   update() {
     super.update();
-    this.r = Math.max(0, this.r - 0.05);
+    this.r = Math.max(0, this.r - 0.04);
   }
 }

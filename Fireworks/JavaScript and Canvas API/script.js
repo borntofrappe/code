@@ -9,7 +9,8 @@ const canvas = document.querySelector('canvas');
 const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = canvas;
 const context = canvas.getContext('2d');
 
-const ODDS_FIREWORK = 100;
+const ODDS_FIREWORK = 70;
+const ODDS_FIREWORK_HEART = 5;
 const GRAVITY = 0.03;
 const VELOCITY_MIN = 3;
 const VELOCITY_MAX = 6;
@@ -22,7 +23,12 @@ let fireworks = [];
 function animate() {
   context.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
   if(Math.floor(Math.random() * ODDS_FIREWORK) === 1) {
+    if(Math.floor(Math.random() * ODDS_FIREWORK_HEART) === 1) {
+    fireworks.push(new HeartFirework())
+    }
+    else {
     fireworks.push(new Firework())
+    }
   }
 
   for(const firework of fireworks) {

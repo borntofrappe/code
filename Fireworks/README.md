@@ -164,3 +164,11 @@ end
 ---
 
 ## JavaScript and Canvas API
+
+Missing features:
+
+- resize canvas
+- adjust magic numbers to window height and window width (position, size)
+- avoid magic numbers in favor of constants (color, size)
+- document class syntax, `super`
+- add fireworks following a mouse click
