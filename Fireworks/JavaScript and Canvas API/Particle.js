@@ -9,7 +9,7 @@ class Particle {
   update() {
     this.position.x = this.position.x + this.velocity.x;
     this.position.y = this.position.y + this.velocity.y;
-   
+
     this.velocity.x = this.velocity.x + this.acceleration.x;
     this.velocity.y = this.velocity.y + this.acceleration.y;
   }

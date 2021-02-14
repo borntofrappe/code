@@ -1,6 +1,9 @@
 class Fragment extends Particle {
   constructor(position, velocity) {
-    const acceleration = {x: 0, y: fragmentGravity}
+    const acceleration = {
+      x: 0,
+      y: fragmentGravity,
+    };
     const r = FRAGMENT_RADIUS;
     super(position, velocity, acceleration, r);
   }

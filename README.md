@@ -58,7 +58,7 @@ Simulate the motion of fireworks and particles.
 
 **Keywords**: Lua, Love2D
 
-**Live demo(s)**: [Fireworks](https://repl.it/@borntofrappe/Fireworks)
+**Live demo(s)**: [Lua and Love2D](https://repl.it/@borntofrappe/Fireworks)
 
 ## Attraction and Repulsion
 

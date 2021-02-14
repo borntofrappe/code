@@ -2,7 +2,7 @@
 
 With this project I set out to simulate fireworks following the example provided in [this coding challenge](https://thecodingtrain.com/CodingChallenges/027-fireworks.html) from [the coding train](https://thecodingtrain.com/) website. The approach is slightly different, the demo is implemented in Lua and Love2D instead of Processing, but the rules, the physics governing the motion of the particles is the same.
 
-To reiterate the point, the demo is recreated with JavaScript and the Canvas API.
+_Update:_ to reiterate how the logic is agnostic of language, the demo is recreated with JavaScript and the Canvas API. The notes are however and mostly dedicated to the Lua version.
 
 ## Physics
 
@@ -161,6 +161,36 @@ if #self.trail > POINTS_TRAIL then
 end
 ```
 
----
-
 ## JavaScript and Canvas API
+
+The demo is recreated in the browser through the Canvas API and `requestAnimationFrame`.
+
+The biggest challenge in implementing the logic from the Lua version is finding the most appropriate values for the gravity and velocity, in an environment withouth a concept of delta time `dt`. In this context, the values are mapped to the height of the window.
+
+Another challenge is connected to the variability of the environment itself. The width, the height of the window are not known in advance, and it is therefore necessary to adjust the simulation according to the computed values. The dimension is also subject to change, as the window might be resized after the simulation is first run. To cope with this last issue, the appropriate variables are modified in as the window registers the `resize` event.
+
+A note on the class syntax used to separate the logic of the simulation. `Particle` describes a body which moves through three variables: position, velocity, acceleration. `Fragment` is created to behave just like a particle, but one that reduces its radius in the `update` function. To add just this functionality, the class extends from the parent class and then repeats the `update` function through the `super` keyword.
+
+```js
+class Fragment extends Particle {
+  // constructor
+
+  update() {
+    super.update();
+    this.r = Math.max(0, this.r - FRAGMENT_RADIUS_DECREASE);
+  }
+}
+```
+
+`super` is also useful with the `HeartFirework` class, which inherits from `Firework`, and then overrides the `getFragments` method, so to change the configuration of the exploding particles.
+
+```js
+class HeartFirework extends Firework {
+  constructor() {
+    super();
+  }
+
+  // overrides getFragments(x, y) from parent class
+  getFragments(x, y) {}
+}
+```
