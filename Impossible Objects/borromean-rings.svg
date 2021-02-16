@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 100 100">
+  <defs>
+    <path id="c" d="M -30 0 a 30 30 0 0 1 60 0 h -5 a 25 25 0 0 0 -50 0 25 25 0 0 0 50 0 h 5 a 30 30 0 0 1 -60 0" />
+    
+    <use id="c1" href="#c" transform="translate(-15 -15)" />
+    <use id="c2" href="#c" transform="translate(15 -15)" />
+    <use id="c3" href="#c" transform="translate(0 7.5)" />
+
+    <mask id="m1">
+      <use href="#c1" fill="white" />
+      <use href="#c3" fill="black" />
+    </mask>
+
+    <mask id="m2">
+      <use href="#c2" fill="white" />
+      <use href="#c1" fill="black" />
+    </mask>
+
+    <!-- <mask id="m3">
+      <use href="#c3" fill="white" />
+      <use href="#c2" fill="black" />
+    </mask> -->
+
+    <radialGradient id="g1">
+      <stop stop-color="hsl(0, 80%, 58%)" offset="0.83" />
+      <stop stop-color="hsl(18, 85%, 70%)" offset="0.915" />
+      <stop stop-color="hsl(0, 80%, 58%)" offset="1" />
+    </radialGradient>
+
+    <radialGradient id="g2">
+      <stop stop-color="hsl(120, 50%, 40%)" offset="0.83" />
+      <stop stop-color="hsl(130, 60%, 50%)" offset="0.915" />
+      <stop stop-color="hsl(120, 50%, 40%)" offset="1" />
+    </radialGradient>
+
+    <radialGradient id="g3">
+      <stop stop-color="hsl(240, 65%, 48%)" offset="0.83" />
+      <stop stop-color="hsl(250, 70%, 58%)" offset="0.915" />
+      <stop stop-color="hsl(240, 65%, 48%)" offset="1" />
+    </radialGradient>
+    
+  </defs>
+  <g stroke="none">
+    <use href="#c3" fill="url(#g3)" mask="url(#m3)" />
+    <use href="#c2" fill="url(#g2)" mask="url(#m2)" />
+    <use href="#c1" fill="url(#g1)" mask="url(#m1)" />
+  </g>
+</svg>
