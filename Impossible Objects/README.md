@@ -20,4 +20,14 @@ _Please note:_ the SVG syntax includes three `<radialGradient>` elements. These 
 
 ## Possible Cube
 
-SVG syntax doesn't currently support 3D `transform` properties, which hampers any immediate progress to create a cube and [Reutersvärd’s triangle](https://en.wikipedia.org/wiki/Impossible_object#/media/File:Reutersv%C3%A4rd%E2%80%99s_triangle.svg). Without knowing the exact coordinates of an equilateral triangle, it is however possible to trace the outline of a cube by translating and rotating a series of segments. `possible-cube.svg` works to showcase how the transformation functions move the segments and most prominently the origin from which the transformation is applied.
+SVG syntax doesn't currently support 3D `transform` properties, which hampers any immediate progress to create a cube and [Reutersvard’s triangle](https://en.wikipedia.org/wiki/Impossible_object#/media/File:Reutersv%C3%A4rd%E2%80%99s_triangle.svg). Without knowing the exact coordinates of an equilateral triangle, it is however possible to trace the outline of a cube by translating and rotating a series of segments. `possible-cube.svg` works to showcase how the transformation functions move the segments and most prominently the origin from which the transformation is applied.
+
+## Possible Triangle
+
+Using CSS transform properties, the goal is to create a series of cubes, positioned in a triangular configuraiton.
+
+In the demo folder, each cube of is created with three `<div>` elements, each with a distinct background color. The `<div>` elements are then rotated to repeat the design of the possible cube.
+
+Interestingly, it is not necessary to apply a `perspective`. This reiterates the tendency for the human eye to perceive depth even when there is none.
+
+Unfortunately, the demo fails to recreate Reutersvard’s triangle, proving once more the impossibility of the visual when using possible shapes. Indeed the last cube should stand above the penultimate, but below the first one.
