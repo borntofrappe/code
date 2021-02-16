@@ -17,3 +17,7 @@ _Please note:_ the SVG syntax includes three `<radialGradient>` elements. These 
 - a `<mask>` elements hides the portion of the visual marked as black, `hsl(0, 0%, 0%)`, and shows those marked as white, `hsl(0, 0%, 100%)`. Anything in between would be partially concealed
 
 - a circle with only a stroke, be it black or white, would not work. This is why each ring is created with a `<path>` element, creating the outline of the circle with a solid fill
+
+## Possible Cube
+
+SVG syntax doesn't currently support 3D `transform` properties, which hampers any immediate progress to create a cube and [Reutersvärd’s triangle](https://en.wikipedia.org/wiki/Impossible_object#/media/File:Reutersv%C3%A4rd%E2%80%99s_triangle.svg). Without knowing the exact coordinates of an equilateral triangle, it is however possible to trace the outline of a cube by translating and rotating a series of segments. `possible-cube.svg` works to showcase how the transformation functions move the segments and most prominently the origin from which the transformation is applied.
