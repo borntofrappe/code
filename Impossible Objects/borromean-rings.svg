@@ -38,8 +38,8 @@
       <stop stop-color="hsl(250, 70%, 58%)" offset="0.915" />
       <stop stop-color="hsl(240, 65%, 48%)" offset="1" />
     </radialGradient>
-    
   </defs>
+  
   <g stroke="none">
     <use href="#c3" fill="url(#g3)" mask="url(#m3)" />
     <use href="#c2" fill="url(#g2)" mask="url(#m2)" />

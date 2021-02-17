@@ -1,7 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 100 100" width="200" height="200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 100 100">
   <defs>
     <path id="half" d="M -20 0 a 40 40 0 0 1 70 0 60 60 0 0 1 -100 15 v -15 a 40 40 0 0 0 70 0 24 24 0 0 0 -40 0" />
   </defs>
+  
   <g stroke="none">
     <use href="#half" fill="hsl(0, 0%, 15%)" />
     <use href="#half" fill="hsl(0, 0%, 5%)" transform="rotate(180)" />

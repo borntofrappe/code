@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 100 100">
+  <g stroke="none" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="hsl(0, 0%, 30%)" d="M -5 -40 h 10 l 30 60 h -50 l 5 -10 h 30z" />
+    <path fill="hsl(0, 0%, 15%)" d="M 35 20 l -5 10 h -60 l 25 -50 5 10 -15 30z" />
+    <path fill="hsl(0, 0%, 5%)" d="M -30 30 l -5 -10 30 -60 25 50 h -10 l -15 -30z" />
+  </g>
+</svg>

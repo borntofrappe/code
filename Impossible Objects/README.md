@@ -18,6 +18,8 @@ _Please note:_ the SVG syntax includes three `<radialGradient>` elements. These 
 
 - a circle with only a stroke, be it black or white, would not work. This is why each ring is created with a `<path>` element, creating the outline of the circle with a solid fill
 
+- it is not necessary to add a mask on the third, blue, ring. This is because the element is drawn first, and the green variants which follows is already drawn on top of its visual
+
 ## Possible Cube
 
 SVG syntax doesn't currently support 3D `transform` properties, which hampers any immediate progress to create a cube and [Reutersvard’s triangle](https://en.wikipedia.org/wiki/Impossible_object#/media/File:Reutersv%C3%A4rd%E2%80%99s_triangle.svg). Without knowing the exact coordinates of an equilateral triangle, it is however possible to trace the outline of a cube by translating and rotating a series of segments. `possible-cube.svg` works to showcase how the transformation functions move the segments and most prominently the origin from which the transformation is applied.
@@ -70,3 +72,7 @@ section div:nth-child(10) {
 ```
 
 In this (rather hacky) manner, the sides can be concealed to either show the cube which comes before or after.
+
+## Penrose Triangle
+
+Back to SVG syntax, the shape is created with three segments, interlocked to provide the illusion of depth.
