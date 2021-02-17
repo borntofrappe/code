@@ -26,8 +26,47 @@ SVG syntax doesn't currently support 3D `transform` properties, which hampers an
 
 Using CSS transform properties, the goal is to create a series of cubes, positioned in a triangular configuraiton.
 
-In the demo folder, each cube of is created with three `<div>` elements, each with a distinct background color. The `<div>` elements are then rotated to repeat the design of the possible cube.
+A first version had the individual cubes created with three `<div>` elements, nested in an `<article>` wrapper.
 
-Interestingly, it is not necessary to apply a `perspective`. This reiterates the tendency for the human eye to perceive depth even when there is none.
+```js
+<article>
+  <div></div>
+  <div></div>
+  <div></div>
+</article>
+```
+
+However, since the cube is shown through three faces only, the markup can be simplified with a single `<div>` element.
+
+```html
+<div></div>
+```
+
+The remaining faces are recreated with pseudo elements.
+
+Interestingly, it is not necessary to apply a `perspective`, but it is necessary to set `preserve-3d` for the `transform-style` property.
 
 Unfortunately, the demo fails to recreate Reutersvard’s triangle, proving once more the impossibility of the visual when using possible shapes. Indeed the last cube should stand above the penultimate, but below the first one.
+
+## Reutersvard’s Triangle
+
+The previous demo is udpdated with one additional `<div>` element, to have the last cube as both the first and last element in the sequence.
+
+```css
+section div:nth-child(1),
+section div:nth-child(10) {
+  transform: translate(-75px, -100px) rotateY(-45deg) rotateX(45deg);
+}
+```
+
+The twist, so to speak, is that the second version is cropped to hide a portion of the visual.
+
+```css
+section div:nth-child(10) {
+  width: 50%;
+  bottom: 0;
+  left: 0;
+}
+```
+
+In this (rather hacky) manner, the sides can be concealed to either show the cube which comes before or after.
